@@ -20,6 +20,38 @@
         {% endif %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('game_index') }}">Predictions</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'game' %} active{% endif %}"
+                               href="{{ path('game_index') }}">Games</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'competition' %} active{% endif %}"
+                               href="{{ path('competition_index') }}">Competitions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'team' %} active{% endif %}"
+                               href="{{ path('team_index') }}">Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'stadium' %} active{% endif %}"
+                               href="{{ path('stadium_index') }}">Stadiums</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'country' %} active{% endif %}"
+                               href="{{ path('country_index') }}">Countries</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         {% block content %}{% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     </body>
