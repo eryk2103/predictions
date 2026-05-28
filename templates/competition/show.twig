@@ -37,7 +37,10 @@
         </div>
     </div>
 
-    <h2 class="h5 mt-5 mb-3">Phases</h2>
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <h2 class="h5 mb-0">Phases</h2>
+        <a href="{{ path('competition_phase_new', {competitionId: competition.id}) }}" class="btn btn-sm btn-outline-primary">+ Add phase</a>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered table-sm align-middle">
             <thead class="table-light">
@@ -46,6 +49,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Sequence</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -55,10 +59,18 @@
                     <td>{{ phase.name }}</td>
                     <td>{{ phase.type.value }}</td>
                     <td>{{ phase.sequence }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('competition_phase_edit', {competitionId: competition.id, id: phase.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form method="post" action="{{ path('competition_phase_delete', {competitionId: competition.id, id: phase.id}) }}" class="d-inline"
+                              onsubmit="return confirm('Delete this phase?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_phase_' ~ phase.id) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4" class="text-center text-muted py-3">No phases defined.</td>
+                    <td colspan="5" class="text-center text-muted py-3">No phases defined.</td>
                 </tr>
                 {% endfor %}
             </tbody>
