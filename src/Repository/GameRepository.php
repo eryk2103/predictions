@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,28 +17,23 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    //    /**
-    //     * @return Game[] Returns an array of Game objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('g.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByFilters(?int $competitionId = null, ?int $phaseId = null, int $page = 1, int $perPage = 20): Paginator
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->join('g.competitionPhase', 'p')
+            ->join('p.Competition', 'c')
+            ->orderBy('g.datetime', 'ASC')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
 
-    //    public function findOneBySomeField($value): ?Game
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($phaseId !== null) {
+            $qb->andWhere('p.id = :phaseId')
+               ->setParameter('phaseId', $phaseId);
+        } elseif ($competitionId !== null) {
+            $qb->andWhere('c.id = :competitionId')
+               ->setParameter('competitionId', $competitionId);
+        }
+
+        return new Paginator($qb);
+    }
 }

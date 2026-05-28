@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Games{% endblock %}
+
+{% block content %}
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">Games</h1>
+            <a href="{{ path('game_new') }}" class="btn btn-primary">New game</a>
+        </div>
+
+        <form method="get" class="row g-2 align-items-end mb-4">
+            <div class="col-auto">
+                <label for="filter-competition" class="form-label">Competition</label>
+                <select id="filter-competition" name="competition" class="form-select form-select-sm"
+                        onchange="this.form.submit()">
+                    <option value="">All competitions</option>
+                    {% for competition in competitions %}
+                        <option value="{{ competition.id }}"
+                                {% if selectedCompetition == competition.id %}selected{% endif %}>
+                            {{ competition.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="filter-phase" class="form-label">Phase</label>
+                <select id="filter-phase" name="phase" class="form-select form-select-sm"
+                        {% if selectedCompetition == null %}disabled{% endif %} onchange="this.form.submit()">
+                    <option value="">All phases</option>
+                    {% for phase in phases %}
+                        <option value="{{ phase.id }}"
+                                data-competition="{{ phase.competition.id }}"
+                                {% if selectedPhase == phase.id %}selected{% endif %}>
+                            {{ phase.competition.name }} — {{ phase.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                {% if selectedCompetition or selectedPhase %}
+                    <a href="{{ path('game_index') }}" class="btn btn-sm btn-outline-secondary">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Home</th>
+                    <th>Score</th>
+                    <th>Away</th>
+                    <th>Phase</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for game in games %}
+                    <tr>
+                        <td>{{ game.id }}</td>
+                        <td>{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</td>
+                        <td>{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</td>
+                        <td class="text-center fw-bold">
+                            {% if game.homeScore is not null %}
+                                {{ game.homeScore }} – {{ game.awayScore }}
+                            {% else %}
+                                –
+                            {% endif %}
+                        </td>
+                        <td>{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</td>
+                        <td>{{ game.competitionPhase.name }}</td>
+                        <td><span class="badge text-bg-secondary">{{ game.status.value }}</span></td>
+                        <td class="text-end">
+                            <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                            <a href="{{ path('game_edit', {id: game.id}) }}"
+                               class="btn btn-sm btn-outline-primary">Edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">No games found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if lastPage > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination pagination-sm justify-content-center mb-0">
+                <li class="page-item{% if page == 1 %} disabled{% endif %}">
+                    <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: page - 1})) }}">‹</a>
+                </li>
+                {% for p in pageLinks %}
+                    {% if p is null %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% else %}
+                        <li class="page-item{% if p == page %} active{% endif %}">
+                            <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: p})) }}">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item{% if page == lastPage %} disabled{% endif %}">
+                    <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: page + 1})) }}">›</a>
+                </li>
+            </ul>
+            <p class="text-center text-muted small mt-1">{{ total }} games total</p>
+        </nav>
+        {% endif %}
+    </div>
+{% endblock %}

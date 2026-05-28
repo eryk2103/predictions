@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit game #{{ game.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="h3 mb-4">Edit game</h1>
+
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.competitionPhase, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.competitionPhase, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.competitionPhase) }}
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        {{ form_label(form.homeTeam, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.homeTeam, {attr: {class: 'form-select'}}) }}
+                        {{ form_errors(form.homeTeam) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.awayTeam, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.awayTeam, {attr: {class: 'form-select'}}) }}
+                        {{ form_errors(form.awayTeam) }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.datetime, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.datetime, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.datetime) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.stadium, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.stadium, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.stadium) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.status, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.status) }}
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        {{ form_label(form.homeScore, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.homeScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.homeScore) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.awayScore, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.awayScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.awayScore) }}
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col">
+                        {{ form_label(form.homePenaltyScore, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.homePenaltyScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.homePenaltyScore) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.awayPenaltyScore, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.awayPenaltyScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.awayPenaltyScore) }}
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
