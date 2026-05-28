@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ stadium.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">{{ stadium.name }}</h1>
+        <div>
+            <a href="{{ path('stadium_edit', {id: stadium.id}) }}" class="btn btn-primary">Edit</a>
+            <form method="post" action="{{ path('stadium_delete', {id: stadium.id}) }}" class="d-inline"
+                  onsubmit="return confirm('Delete {{ stadium.name }}?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_stadium_' ~ stadium.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">City</dt>
+                <dd class="col-sm-9">{{ stadium.city }}</dd>
+
+                <dt class="col-sm-3">Country</dt>
+                <dd class="col-sm-9">
+                    {% if stadium.country %}
+                        <a href="{{ path('country_show', {id: stadium.country.id}) }}">{{ stadium.country.name }}</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">Capacity</dt>
+                <dd class="col-sm-9">{{ stadium.capacity ? stadium.capacity|number_format : '—' }}</dd>
+
+                <dt class="col-sm-3">Created</dt>
+                <dd class="col-sm-9">{{ stadium.createdAt|date('Y-m-d H:i') }}</dd>
+
+                <dt class="col-sm-3">Updated</dt>
+                <dd class="col-sm-9">{{ stadium.updatedAt|date('Y-m-d H:i') }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <a href="{{ path('stadium_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
+</div>
+{% endblock %}
