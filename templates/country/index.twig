@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Countries{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Countries</h1>
+        <a href="{{ path('country_new') }}" class="btn btn-primary">New country</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Flag</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for country in countries %}
+                <tr>
+                    <td>{{ country.id }}</td>
+                    <td>{{ country.name }}</td>
+                    <td>{{ country.flag ?: '—' }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('country_show', {id: country.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ path('country_edit', {id: country.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">No countries found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
