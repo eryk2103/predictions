@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit {{ team.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <h1 class="h3 mb-4">Edit team</h1>
+
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.name, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.name, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.shortName, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.shortName, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.shortName) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.code, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.code, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.code) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.logo, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.logo, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.logo) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.city, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.city, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.city) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.country, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.country, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.country) }}
+                </div>
+                <div class="mb-4">
+                    {{ form_label(form.stadium, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.stadium, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.stadium) }}
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ path('team_show', {id: team.id}) }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

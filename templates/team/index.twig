@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Teams</h1>
+        <a href="{{ path('team_new') }}" class="btn btn-primary">New team</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Short name</th>
+                    <th>Code</th>
+                    <th>Country</th>
+                    <th>Stadium</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in teams %}
+                <tr>
+                    <td>{{ team.id }}</td>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.shortName }}</td>
+                    <td><span class="badge text-bg-secondary">{{ team.code }}</span></td>
+                    <td>{{ team.country ? team.country.name : '—' }}</td>
+                    <td>{{ team.stadium ? team.stadium.name : '—' }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('team_show', {id: team.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ path('team_edit', {id: team.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">No teams found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
