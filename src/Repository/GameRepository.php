@@ -17,6 +17,20 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
+    /** @return Game[] */
+    public function findAllByCompetition(int $competitionId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.competitionPhase', 'p')
+            ->join('p.Competition', 'c')
+            ->andWhere('c.id = :competitionId')
+            ->setParameter('competitionId', $competitionId)
+            ->orderBy('p.sequence', 'ASC')
+            ->addOrderBy('g.datetime', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByFilters(?int $competitionId = null, ?int $phaseId = null, int $page = 1, int $perPage = 20): Paginator
     {
         $qb = $this->createQueryBuilder('g')

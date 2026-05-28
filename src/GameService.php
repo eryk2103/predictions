@@ -65,6 +65,17 @@ class GameService
         return $this->repository->findByFilters($competitionId, $phaseId, $page, $perPage);
     }
 
+    /** @return array<int, Game[]> games indexed by phase id */
+    public function getGroupedByPhase(int $competitionId): array
+    {
+        $grouped = [];
+        foreach ($this->repository->findAllByCompetition($competitionId) as $game) {
+            $grouped[$game->getCompetitionPhase()->getId()][] = $game;
+        }
+
+        return $grouped;
+    }
+
     public function update(
         Game $game,
         ?CompetitionPhase $competitionPhase = null,

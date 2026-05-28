@@ -76,8 +76,7 @@
                         <td><span class="badge text-bg-secondary">{{ game.status.value }}</span></td>
                         <td class="text-end">
                             <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                            <a href="{{ path('game_edit', {id: game.id}) }}"
-                               class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{{ path('game_edit', {id: game.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                         </td>
                     </tr>
                 {% else %}

@@ -16,28 +16,17 @@ class StandingRepository extends ServiceEntityRepository
         parent::__construct($registry, Standing::class);
     }
 
-    //    /**
-    //     * @return Standing[] Returns an array of Standing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /** @return Standing[] */
+    public function findByCompetition(?int $competitionId = null): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.position', 'ASC');
 
-    //    public function findOneBySomeField($value): ?Standing
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($competitionId !== null) {
+            $qb->andWhere('s.competition = :competitionId')
+               ->setParameter('competitionId', $competitionId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

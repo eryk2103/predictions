@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Standing #{{ standing.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Standing #{{ standing.id }}</h1>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('standing_edit', {id: standing.id}) }}" class="btn btn-outline-primary">Edit</a>
+                    <a href="{{ path('standing_index') }}" class="btn btn-outline-secondary">Back</a>
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr><th class="w-25">Competition</th><td>{{ standing.competition.name }}</td></tr>
+                    <tr><th>Team</th><td>{{ standing.team.name }}</td></tr>
+                    <tr><th>Position</th><td>{{ standing.position }}</td></tr>
+                    <tr><th>Played</th><td>{{ standing.played }}</td></tr>
+                    <tr><th>Won</th><td>{{ standing.won }}</td></tr>
+                    <tr><th>Drawn</th><td>{{ standing.drawn }}</td></tr>
+                    <tr><th>Lost</th><td>{{ standing.lost }}</td></tr>
+                    <tr><th>Goals For</th><td>{{ standing.goals }}</td></tr>
+                    <tr><th>Goals Against</th><td>{{ standing.goalsAgainst }}</td></tr>
+                    <tr><th>Goal Difference</th><td>{{ standing.goals - standing.goalsAgainst }}</td></tr>
+                    <tr><th>Points</th><td><strong>{{ standing.points }}</strong></td></tr>
+                </tbody>
+            </table>
+
+            <form method="post" action="{{ path('standing_delete', {id: standing.id}) }}"
+                  onsubmit="return confirm('Delete this standing?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_standing_' ~ standing.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

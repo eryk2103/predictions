@@ -48,6 +48,10 @@
                             <a class="nav-link{% if app.request.attributes.get('_route') starts with 'country' %} active{% endif %}"
                                href="{{ path('country_index') }}">Countries</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'standing' %} active{% endif %}"
+                               href="{{ path('standing_index') }}">Standings</a>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit standing #{{ standing.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="h3 mb-4">Edit standing</h1>
+
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.competition, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.competition, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.competition) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.team, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.team, {attr: {class: 'form-select'}}) }}
+                    {{ form_errors(form.team) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.position, null, {label_attr: {class: 'form-label'}}) }}
+                    {{ form_widget(form.position, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.position) }}
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        {{ form_label(form.played, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.played, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.played) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.won, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.won, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.won) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.drawn, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.drawn, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.drawn) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.lost, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.lost, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.lost) }}
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col">
+                        {{ form_label(form.goals, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.goals, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.goals) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.goalsAgainst, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.goalsAgainst, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.goalsAgainst) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.points, null, {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.points, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.points) }}
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ path('standing_index') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

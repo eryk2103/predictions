@@ -6,7 +6,6 @@ use App\CompetitionService;
 use App\Entity\Game;
 use App\Form\GameType;
 use App\GameService;
-use App\Repository\CompetitionPhaseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
