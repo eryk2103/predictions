@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+// Entity has to have #[ORM\HasLifecycleCallbacks]
 trait TimestampTrait
 {
     #[ORM\Column]

@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Game
 {
     use TimestampTrait;

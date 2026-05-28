@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompetitionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Competition
 {
     use TimestampTrait;
@@ -36,7 +37,8 @@ class Competition
     /**
      * @var Collection<int, CompetitionPhase>
      */
-    #[ORM\OneToMany(targetEntity: CompetitionPhase::class, mappedBy: 'Competition', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CompetitionPhase::class, mappedBy: 'Competition', orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OrderBy(['sequence' => 'ASC', 'name' => 'ASC'])]
     private Collection $competitionPhases;
 
     /**
