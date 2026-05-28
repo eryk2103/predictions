@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ competition.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">{{ competition.name }}</h1>
+        <div>
+            <a href="{{ path('competition_edit', {id: competition.id}) }}" class="btn btn-primary">Edit</a>
+            <form method="post" action="{{ path('competition_delete', {id: competition.id}) }}" class="d-inline"
+                  onsubmit="return confirm('Delete {{ competition.name }}?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_competition_' ~ competition.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Short name</dt>
+                <dd class="col-sm-9">{{ competition.shortName }}</dd>
+
+                <dt class="col-sm-3">Season</dt>
+                <dd class="col-sm-9">{{ competition.startYear }}/{{ competition.endYear }}</dd>
+
+                <dt class="col-sm-3">Logo</dt>
+                <dd class="col-sm-9">{{ competition.logo ?? '—' }}</dd>
+
+                <dt class="col-sm-3">Created</dt>
+                <dd class="col-sm-9">{{ competition.createdAt|date('Y-m-d H:i') }}</dd>
+
+                <dt class="col-sm-3">Updated</dt>
+                <dd class="col-sm-9">{{ competition.updatedAt|date('Y-m-d H:i') }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <h2 class="h5 mt-5 mb-3">Phases</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Sequence</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for phase in competition.competitionPhases %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ phase.name }}</td>
+                    <td>{{ phase.type.value }}</td>
+                    <td>{{ phase.sequence }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-3">No phases defined.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('competition_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
+</div>
+{% endblock %}
