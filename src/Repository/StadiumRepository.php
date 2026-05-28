@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Stadium;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,28 +17,13 @@ class StadiumRepository extends ServiceEntityRepository
         parent::__construct($registry, Stadium::class);
     }
 
-    //    /**
-    //     * @return Stadium[] Returns an array of Stadium objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findPaginated(int $page, int $perPage): Paginator
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.name', 'ASC')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
 
-    //    public function findOneBySomeField($value): ?Stadium
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return new Paginator($qb);
+    }
 }

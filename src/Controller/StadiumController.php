@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Stadium;
 use App\Form\StadiumType;
+use App\PaginationTrait;
 use App\StadiumService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +14,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/stadium')]
 class StadiumController extends AbstractController
 {
+    use PaginationTrait;
+
     public function __construct(private readonly StadiumService $service) {}
 
     #[Route('', name: 'stadium_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $page = max(1, $request->query->getInt('page', 1));
+        $paginator = $this->service->getAll($page, self::PER_PAGE);
+
         return $this->render('stadium/index.twig', [
-            'stadiums' => $this->service->getAll(),
+            'stadiums' => $paginator,
+            ...$this->paginationData(count($paginator), $page),
         ]);
     }
 

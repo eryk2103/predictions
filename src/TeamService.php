@@ -7,6 +7,7 @@ use App\Entity\Stadium;
 use App\Entity\Team;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TeamService
@@ -51,10 +52,9 @@ class TeamService
         return $team;
     }
 
-    /** @return Team[] */
-    public function getAll(): array
+    public function getAll(int $page = 1, int $perPage = 20): Paginator
     {
-        return $this->repository->findAll();
+        return $this->repository->findPaginated($page, $perPage);
     }
 
     public function update(

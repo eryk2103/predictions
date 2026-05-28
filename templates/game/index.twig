@@ -88,27 +88,6 @@
             </table>
         </div>
 
-        {% if lastPage > 1 %}
-        <nav class="mt-3">
-            <ul class="pagination pagination-sm justify-content-center mb-0">
-                <li class="page-item{% if page == 1 %} disabled{% endif %}">
-                    <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: page - 1})) }}">‹</a>
-                </li>
-                {% for p in pageLinks %}
-                    {% if p is null %}
-                        <li class="page-item disabled"><span class="page-link">…</span></li>
-                    {% else %}
-                        <li class="page-item{% if p == page %} active{% endif %}">
-                            <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: p})) }}">{{ p }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                <li class="page-item{% if page == lastPage %} disabled{% endif %}">
-                    <a class="page-link" href="{{ path('game_index', app.request.query.all|merge({page: page + 1})) }}">›</a>
-                </li>
-            </ul>
-            <p class="text-center text-muted small mt-1">{{ total }} games total</p>
-        </nav>
-        {% endif %}
+        {{ include('_pagination.twig', {label: 'games'}) }}
     </div>
 {% endblock %}

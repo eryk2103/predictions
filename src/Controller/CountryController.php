@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\CountryService;
 use App\Entity\Country;
 use App\Form\CountryType;
+use App\PaginationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,13 +14,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/country')]
 class CountryController extends AbstractController
 {
+    use PaginationTrait;
+
     public function __construct(private readonly CountryService $service) {}
 
     #[Route('', name: 'country_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $page = max(1, $request->query->getInt('page', 1));
+        $paginator = $this->service->getAll($page, self::PER_PAGE);
+
         return $this->render('country/index.twig', [
-            'countries' => $this->service->getAll(),
+            'countries' => $paginator,
+            ...$this->paginationData(count($paginator), $page),
         ]);
     }
 

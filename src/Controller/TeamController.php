@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Team;
 use App\Form\TeamType;
+use App\PaginationTrait;
 use App\TeamService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +14,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/team')]
 class TeamController extends AbstractController
 {
+    use PaginationTrait;
+
     public function __construct(private readonly TeamService $service) {}
 
     #[Route('', name: 'team_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $page = max(1, $request->query->getInt('page', 1));
+        $paginator = $this->service->getAll($page, self::PER_PAGE);
+
         return $this->render('team/index.twig', [
-            'teams' => $this->service->getAll(),
+            'teams' => $paginator,
+            ...$this->paginationData(count($paginator), $page),
         ]);
     }
 

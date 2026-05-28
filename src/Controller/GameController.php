@@ -6,6 +6,7 @@ use App\CompetitionService;
 use App\Entity\Game;
 use App\Form\GameType;
 use App\GameService;
+use App\PaginationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,13 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/game')]
 class GameController extends AbstractController
 {
+    use PaginationTrait;
+
     public function __construct(
         private readonly GameService        $service,
         private readonly CompetitionService $competitionService)
     {
     }
-
-    private const PER_PAGE = 20;
 
     #[Route('', name: 'game_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -35,9 +36,6 @@ class GameController extends AbstractController
         }
 
         $paginator = $this->service->getAll($competitionId, $phaseId, $page, self::PER_PAGE);
-        $total = count($paginator);
-        $lastPage = max(1, (int) ceil($total / self::PER_PAGE));
-        $pageLinks = $this->buildPageLinks($page, $lastPage);
 
         return $this->render('game/index.twig', [
             'games' => $paginator,
@@ -45,33 +43,8 @@ class GameController extends AbstractController
             'phases' => $phases,
             'selectedCompetition' => $competitionId,
             'selectedPhase' => $phaseId,
-            'page' => $page,
-            'lastPage' => $lastPage,
-            'total' => $total,
-            'pageLinks' => $pageLinks,
+            ...$this->paginationData(count($paginator), $page),
         ]);
-    }
-
-    /** @return array<int|null> — null means ellipsis */
-    private function buildPageLinks(int $page, int $lastPage): array
-    {
-        $show = array_fill_keys([1, $lastPage], true);
-        for ($i = max(1, $page - 2); $i <= min($lastPage, $page + 2); $i++) {
-            $show[$i] = true;
-        }
-        ksort($show);
-
-        $links = [];
-        $prev = 0;
-        foreach (array_keys($show) as $p) {
-            if ($p - $prev > 1) {
-                $links[] = null;
-            }
-            $links[] = $p;
-            $prev = $p;
-        }
-
-        return $links;
     }
 
     #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
