@@ -18,6 +18,17 @@ class GameRepository extends ServiceEntityRepository
     }
 
     /** @return Game[] */
+    public function findByCurrentPhases(): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.competitionPhase', 'p')
+            ->andWhere('p.isCurrent = true')
+            ->orderBy('g.datetime', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return Game[] */
     public function findAllByCompetition(int $competitionId): array
     {
         return $this->createQueryBuilder('g')

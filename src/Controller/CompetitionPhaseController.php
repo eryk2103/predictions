@@ -33,6 +33,7 @@ class CompetitionPhaseController extends AbstractController
                 $phase->getName(),
                 $phase->getType(),
                 $phase->getSequence(),
+                $phase->isCurrent(),
             );
 
             return $this->redirectToRoute('competition_show', ['id' => $competitionId]);
@@ -58,6 +59,7 @@ class CompetitionPhaseController extends AbstractController
                 $phase->getName(),
                 $phase->getType(),
                 $phase->getSequence(),
+                $phase->isCurrent(),
             );
 
             return $this->redirectToRoute('competition_show', ['id' => $competitionId]);

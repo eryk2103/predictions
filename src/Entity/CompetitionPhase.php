@@ -31,6 +31,9 @@ class CompetitionPhase
     #[ORM\JoinColumn(nullable: false)]
     private ?Competition $Competition = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isCurrent = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,6 +83,18 @@ class CompetitionPhase
     public function setCompetition(?Competition $Competition): static
     {
         $this->Competition = $Competition;
+
+        return $this;
+    }
+
+    public function isCurrent(): ?bool
+    {
+        return $this->isCurrent;
+    }
+
+    public function setIsCurrent(bool $isCurrent): static
+    {
+        $this->isCurrent = $isCurrent;
 
         return $this;
     }

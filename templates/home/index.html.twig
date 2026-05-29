@@ -1,4 +1,41 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
 {% block content %}
-    <h1>Home</h1>
+<div class="container py-4">
+    <h1 class="h3 mb-4">Current games</h1>
+
+    {% if games is empty %}
+        <p class="text-muted">No active phase games at the moment.</p>
+    {% else %}
+        {% set currentPhaseId = null %}
+        {% for game in games %}
+            {% if game.competitionPhase.id != currentPhaseId %}
+                {% if currentPhaseId is not null %}</div>{% endif %}
+                {% set currentPhaseId = game.competitionPhase.id %}
+                <h5 class="mt-4 mb-2 text-muted fw-semibold">
+                    {{ game.competitionPhase.competition.shortName }} · {{ game.competitionPhase.name }}
+                </h5>
+                <div class="d-flex flex-column gap-2">
+            {% endif %}
+            <div class="card">
+                <div class="card-body py-2 px-3" style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto; align-items: center; gap: 0.75rem;">
+                    <span class="fw-semibold text-end">{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</span>
+                    <span class="fw-bold text-center">
+                        {% if game.homeScore is not null %}
+                            {{ game.homeScore }} – {{ game.awayScore }}
+                        {% else %}
+                            vs
+                        {% endif %}
+                    </span>
+                    <span class="fw-semibold">{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</span>
+                    <small class="text-muted text-nowrap">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</small>
+                    <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

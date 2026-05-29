@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\CompetitionPhase;
 use App\Enum\PhaseTypeEnum;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,7 +19,8 @@ class CompetitionPhaseType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('type', EnumType::class, ['class' => PhaseTypeEnum::class])
-            ->add('sequence', IntegerType::class);
+            ->add('sequence', IntegerType::class)
+            ->add('isCurrent', CheckboxType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

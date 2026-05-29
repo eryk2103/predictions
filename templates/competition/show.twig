@@ -49,6 +49,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Sequence</th>
+                    <th>Current</th>
                     <th></th>
                 </tr>
             </thead>
@@ -59,6 +60,7 @@
                     <td>{{ phase.name }}</td>
                     <td>{{ phase.type.value }}</td>
                     <td>{{ phase.sequence }}</td>
+                    <td>{{ phase.current ? 'Yes' : 'No'}}</td>
                     <td class="text-end">
                         <a href="{{ path('competition_phase_edit', {competitionId: competition.id, id: phase.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                         <form method="post" action="{{ path('competition_phase_delete', {competitionId: competition.id, id: phase.id}) }}" class="d-inline"

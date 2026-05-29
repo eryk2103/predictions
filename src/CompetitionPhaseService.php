@@ -16,13 +16,14 @@ class CompetitionPhaseService
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(Competition $competition, string $name, PhaseTypeEnum $type, int $sequence): CompetitionPhase
+    public function create(Competition $competition, string $name, PhaseTypeEnum $type, int $sequence, bool $isCurrent = false): CompetitionPhase
     {
         $phase = (new CompetitionPhase())
             ->setCompetition($competition)
             ->setName($name)
             ->setType($type)
-            ->setSequence($sequence);
+            ->setSequence($sequence)
+            ->setIsCurrent($isCurrent);
 
         $this->em->persist($phase);
         $this->em->flush();
@@ -41,7 +42,7 @@ class CompetitionPhaseService
         return $phase;
     }
 
-    public function update(CompetitionPhase $phase, ?string $name = null, ?PhaseTypeEnum $type = null, ?int $sequence = null): CompetitionPhase
+    public function update(CompetitionPhase $phase, ?string $name = null, ?PhaseTypeEnum $type = null, ?int $sequence = null, ?bool $isCurrent = null): CompetitionPhase
     {
         if ($name !== null) {
             $phase->setName($name);
@@ -51,6 +52,9 @@ class CompetitionPhaseService
         }
         if ($sequence !== null) {
             $phase->setSequence($sequence);
+        }
+        if ($isCurrent !== null) {
+            $phase->setIsCurrent($isCurrent);
         }
 
         $this->em->flush();
