@@ -18,7 +18,7 @@ class CompetitionController extends AbstractController
     #[Route('', name: 'competition_index', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('competition/index.twig', [
+        return $this->render('admin/competition/index.twig', [
             'competitions' => $this->service->getAll(),
         ]);
     }
@@ -36,7 +36,7 @@ class CompetitionController extends AbstractController
             return $this->redirectToRoute('admin_competition_index');
         }
 
-        return $this->render('competition/new.twig', [
+        return $this->render('admin/competition/new.twig', [
             'form' => $form,
         ]);
     }
@@ -44,7 +44,7 @@ class CompetitionController extends AbstractController
     #[Route('/{id}', name: 'competition_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('competition/show.twig', [
+        return $this->render('admin/competition/show.twig', [
             'competition' => $this->service->get($id),
         ]);
     }
@@ -71,7 +71,7 @@ class CompetitionController extends AbstractController
             return $this->redirectToRoute('admin_competition_show', ['id' => $id]);
         }
 
-        return $this->render('competition/edit.twig', [
+        return $this->render('admin/competition/edit.twig', [
             'competition' => $competition,
             'form' => $form,
         ]);

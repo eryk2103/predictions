@@ -24,7 +24,7 @@ class TeamController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $paginator = $this->service->getAll($page, self::PER_PAGE);
 
-        return $this->render('team/index.twig', [
+        return $this->render('admin/team/index.twig', [
             'teams' => $paginator,
             ...$this->paginationData(count($paginator), $page),
         ]);
@@ -51,7 +51,7 @@ class TeamController extends AbstractController
             return $this->redirectToRoute('admin_team_index');
         }
 
-        return $this->render('team/new.twig', [
+        return $this->render('admin/team/new.twig', [
             'form' => $form,
         ]);
     }
@@ -59,7 +59,7 @@ class TeamController extends AbstractController
     #[Route('/{id}', name: 'team_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('team/show.twig', [
+        return $this->render('admin/team/show.twig', [
             'team' => $this->service->get($id),
         ]);
     }
@@ -86,7 +86,7 @@ class TeamController extends AbstractController
             return $this->redirectToRoute('admin_team_show', ['id' => $id]);
         }
 
-        return $this->render('team/edit.twig', [
+        return $this->render('admin/team/edit.twig', [
             'team' => $team,
             'form' => $form,
         ]);

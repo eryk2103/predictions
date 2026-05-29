@@ -36,7 +36,7 @@ class StandingController extends AbstractController
 
         $groupedGames = $phases ? $this->gameService->getGroupedByPhase($competitionId) : [];
 
-        return $this->render('standing/index.twig', [
+        return $this->render('admin/standing/index.twig', [
             'standings' => $competitionId !== null ? $this->service->getAll($competitionId) : [],
             'competitions' => $this->competitionService->getAll(),
             'selectedCompetition' => $competitionId,
@@ -69,7 +69,7 @@ class StandingController extends AbstractController
             return $this->redirectToRoute('admin_standing_index');
         }
 
-        return $this->render('standing/new.twig', [
+        return $this->render('admin/standing/new.twig', [
             'form' => $form,
         ]);
     }
@@ -77,7 +77,7 @@ class StandingController extends AbstractController
     #[Route('/{id}', name: 'standing_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('standing/show.twig', [
+        return $this->render('admin/standing/show.twig', [
             'standing' => $this->service->get($id),
         ]);
     }
@@ -107,7 +107,7 @@ class StandingController extends AbstractController
             return $this->redirectToRoute('admin_standing_show', ['id' => $id]);
         }
 
-        return $this->render('standing/edit.twig', [
+        return $this->render('admin/standing/edit.twig', [
             'standing' => $standing,
             'form' => $form,
         ]);

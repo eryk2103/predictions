@@ -37,7 +37,7 @@ class GameController extends AbstractController
 
         $paginator = $this->service->getAll($competitionId, $phaseId, $page, self::PER_PAGE);
 
-        return $this->render('game/index.twig', [
+        return $this->render('admin/game/index.twig', [
             'games' => $paginator,
             'competitions' => $this->competitionService->getAll(),
             'phases' => $phases,
@@ -71,7 +71,7 @@ class GameController extends AbstractController
             return $this->redirectToRoute('admin_game_index');
         }
 
-        return $this->render('game/new.twig', [
+        return $this->render('admin/game/new.twig', [
             'form' => $form,
         ]);
     }
@@ -79,7 +79,7 @@ class GameController extends AbstractController
     #[Route('/{id}', name: 'game_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('game/show.twig', [
+        return $this->render('admin/game/show.twig', [
             'game' => $this->service->get($id),
         ]);
     }
@@ -109,7 +109,7 @@ class GameController extends AbstractController
             return $this->redirectToRoute('admin_game_show', ['id' => $id]);
         }
 
-        return $this->render('game/edit.twig', [
+        return $this->render('admin/game/edit.twig', [
             'game' => $game,
             'form' => $form,
         ]);

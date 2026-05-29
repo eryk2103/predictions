@@ -24,7 +24,7 @@ class StadiumController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $paginator = $this->service->getAll($page, self::PER_PAGE);
 
-        return $this->render('stadium/index.twig', [
+        return $this->render('admin/stadium/index.twig', [
             'stadiums' => $paginator,
             ...$this->paginationData(count($paginator), $page),
         ]);
@@ -48,7 +48,7 @@ class StadiumController extends AbstractController
             return $this->redirectToRoute('admin_stadium_index');
         }
 
-        return $this->render('stadium/new.twig', [
+        return $this->render('admin/stadium/new.twig', [
             'form' => $form,
         ]);
     }
@@ -56,7 +56,7 @@ class StadiumController extends AbstractController
     #[Route('/{id}', name: 'stadium_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('stadium/show.twig', [
+        return $this->render('admin/stadium/show.twig', [
             'stadium' => $this->service->get($id),
         ]);
     }
@@ -80,7 +80,7 @@ class StadiumController extends AbstractController
             return $this->redirectToRoute('admin_stadium_show', ['id' => $id]);
         }
 
-        return $this->render('stadium/edit.twig', [
+        return $this->render('admin/stadium/edit.twig', [
             'stadium' => $stadium,
             'form' => $form,
         ]);

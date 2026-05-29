@@ -24,7 +24,7 @@ class CountryController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $paginator = $this->service->getAll($page, self::PER_PAGE);
 
-        return $this->render('country/index.twig', [
+        return $this->render('admin/country/index.twig', [
             'countries' => $paginator,
             ...$this->paginationData(count($paginator), $page),
         ]);
@@ -43,7 +43,7 @@ class CountryController extends AbstractController
             return $this->redirectToRoute('admin_country_index');
         }
 
-        return $this->render('country/new.twig', [
+        return $this->render('admin/country/new.twig', [
             'form' => $form,
         ]);
     }
@@ -51,7 +51,7 @@ class CountryController extends AbstractController
     #[Route('/{id}', name: 'country_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        return $this->render('country/show.twig', [
+        return $this->render('admin/country/show.twig', [
             'country' => $this->service->get($id),
         ]);
     }
@@ -69,7 +69,7 @@ class CountryController extends AbstractController
             return $this->redirectToRoute('admin_country_show', ['id' => $id]);
         }
 
-        return $this->render('country/edit.twig', [
+        return $this->render('admin/country/edit.twig', [
             'country' => $country,
             'form' => $form,
         ]);

@@ -39,7 +39,7 @@ class CompetitionPhaseController extends AbstractController
             return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
         }
 
-        return $this->render('competition_phase/new.twig', [
+        return $this->render('admin/competition_phase/new.twig', [
             'competition' => $competition,
             'form' => $form,
         ]);
@@ -65,7 +65,7 @@ class CompetitionPhaseController extends AbstractController
             return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
         }
 
-        return $this->render('competition_phase/edit.twig', [
+        return $this->render('admin/competition_phase/edit.twig', [
             'competition' => $competition,
             'phase' => $phase,
             'form' => $form,
