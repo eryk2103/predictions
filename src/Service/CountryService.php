@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Service;
 
 use App\Entity\Country;
 use App\Repository\CountryRepository;

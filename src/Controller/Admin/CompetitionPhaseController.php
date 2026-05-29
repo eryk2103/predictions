@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\CompetitionPhaseService;
-use App\CompetitionService;
+use App\Service\CompetitionPhaseService;
+use App\Service\CompetitionService;
 use App\Entity\CompetitionPhase;
 use App\Form\CompetitionPhaseType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

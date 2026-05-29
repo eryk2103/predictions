@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\CompetitionService;
+use App\Service\CompetitionService;
 use App\Entity\Standing;
 use App\Enum\PhaseTypeEnum;
 use App\Form\StandingType;
-use App\GameService;
-use App\StandingService;
+use App\Service\GameService;
+use App\Service\StandingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Team;
 use App\Form\TeamType;
-use App\PaginationTrait;
-use App\TeamService;
+use App\Service\PaginationTrait;
+use App\Service\TeamService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

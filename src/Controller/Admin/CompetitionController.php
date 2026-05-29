@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\CompetitionService;
+use App\Service\CompetitionService;
 use App\Entity\Competition;
 use App\Form\CompetitionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

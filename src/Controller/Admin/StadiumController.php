@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Stadium;
 use App\Form\StadiumType;
-use App\PaginationTrait;
-use App\StadiumService;
+use App\Service\PaginationTrait;
+use App\Service\StadiumService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

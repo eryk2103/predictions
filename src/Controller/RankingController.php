@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\CompetitionService;
-use App\RankingService;
+use App\Service\CompetitionService;
+use App\Service\RankingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,14 +2,14 @@
 
 namespace App\Controller\Admin;
 
-use App\CompetitionService;
+use App\Service\CompetitionService;
 use App\Entity\Game;
 use App\Enum\GameStatusEnum;
 use App\Form\GameLiveType;
 use App\Form\GameType;
-use App\GameService;
-use App\PaginationTrait;
-use App\PredictionPointService;
+use App\Service\GameService;
+use App\Service\PaginationTrait;
+use App\Service\PredictionPointService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

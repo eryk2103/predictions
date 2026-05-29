@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\CompetitionService;
+use App\Service\CompetitionService;
 use App\Entity\Prediction;
 use App\Enum\PhaseTypeEnum;
 use App\Form\PredictionType;
-use App\GameService;
-use App\PaginationTrait;
-use App\PredictionService;
+use App\Service\GameService;
+use App\Service\PaginationTrait;
+use App\Service\PredictionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\GameService;
+use App\Service\GameService;
 use App\Repository\PredictionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,10 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\CountryService;
+use App\Service\CountryService;
 use App\Entity\Country;
 use App\Form\CountryType;
-use App\PaginationTrait;
+use App\Service\PaginationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
