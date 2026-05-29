@@ -9,9 +9,6 @@
         {% block stylesheets %}
         {% endblock %}
 
-        {% block javascripts %}
-        {% endblock %}
-
         {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
         {% if frankenphpHotReload %}
         <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
@@ -32,6 +29,12 @@
                             <a class="nav-link{% if app.request.attributes.get('_route') == 'home_index' %} active{% endif %}"
                                href="{{ path('home_index') }}">Home</a>
                         </li>
+                        {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'prediction_' %} active{% endif %}"
+                               href="{{ path('prediction_index') }}">Predictions</a>
+                        </li>
+                        {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                         {% set isAdmin = app.request.attributes.get('_route') starts with 'admin_' %}
                         <li class="nav-item dropdown">
@@ -78,5 +81,6 @@
         </nav>
         {% block content %}{% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

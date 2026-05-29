@@ -20,7 +20,7 @@
                 <div class="d-flex flex-column gap-2">
             {% endif %}
             <div class="card">
-                <div class="card-body py-2 px-3" style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto; align-items: center; gap: 0.75rem;">
+                <div class="card-body py-2 px-3" style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto auto; align-items: center; gap: 0.75rem;">
                     <span class="fw-semibold text-end">{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</span>
                     <span class="fw-bold text-center">
                         {% if game.homeScore is not null %}
@@ -30,6 +30,15 @@
                         {% endif %}
                     </span>
                     <span class="fw-semibold">{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</span>
+                    <small class="text-nowrap">
+                        {% set prediction = predictions[game.id] ?? null %}
+                        {% if prediction and game.datetime and prediction.createdAt < game.datetime %}
+                            <span class="text-primary fw-semibold">{{ prediction.homeScore }} – {{ prediction.awayScore }}</span>
+                            {% if prediction.homePenalty is not null %}
+                                <span class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }})</span>
+                            {% endif %}
+                        {% endif %}
+                    </small>
                     <small class="text-muted text-nowrap">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</small>
                     <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
                 </div>
