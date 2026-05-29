@@ -33,6 +33,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @return array<int, array{id: int, email: string, points: int}>
+     */
+    public function getRankings(?int $competitionId = null, ?int $phaseId = null): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u.id, u.email, COALESCE(SUM(p.points), 0) AS points')
+            ->leftJoin('u.predictions', 'p');
+
+        if ($phaseId !== null) {
+            $qb->leftJoin('p.game', 'g')
+               ->leftJoin('g.competitionPhase', 'ph')
+               ->andWhere('ph.id = :phaseId')
+               ->setParameter('phaseId', $phaseId);
+        } elseif ($competitionId !== null) {
+            $qb->leftJoin('p.game', 'g')
+               ->leftJoin('g.competitionPhase', 'ph')
+               ->leftJoin('ph.Competition', 'c')
+               ->andWhere('c.id = :competitionId')
+               ->setParameter('competitionId', $competitionId);
+        }
+
+        return $qb
+            ->groupBy('u.id')
+            ->orderBy('points', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
