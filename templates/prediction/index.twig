@@ -8,6 +8,40 @@
         <h1 class="h3 mb-0">My Predictions</h1>
     </div>
 
+    <form method="get" class="row g-2 align-items-end mb-4">
+        <div class="col-auto">
+            <label for="filter-competition" class="form-label">Competition</label>
+            <select id="filter-competition" name="competition" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                <option value="">All competitions</option>
+                {% for competition in competitions %}
+                    <option value="{{ competition.id }}"
+                            {% if selectedCompetition == competition.id %}selected{% endif %}>
+                        {{ competition.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <label for="filter-phase" class="form-label">Phase</label>
+            <select id="filter-phase" name="phase" class="form-select form-select-sm"
+                    {% if selectedCompetition == null %}disabled{% endif %} onchange="this.form.submit()">
+                <option value="">All phases</option>
+                {% for phase in phases %}
+                    <option value="{{ phase.id }}"
+                            {% if selectedPhase == phase.id %}selected{% endif %}>
+                        {{ phase.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if selectedCompetition or selectedPhase %}
+        <div class="col-auto">
+            <a href="{{ path('prediction_index') }}" class="btn btn-sm btn-outline-secondary">Clear</a>
+        </div>
+        {% endif %}
+    </form>
+
     {% if predictions is empty %}
         <p class="text-muted">You have no predictions yet.</p>
     {% else %}

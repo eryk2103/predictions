@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\CompetitionService;
 use App\Entity\Prediction;
+use App\Enum\PhaseTypeEnum;
 use App\Form\PredictionType;
 use App\GameService;
 use App\PaginationTrait;
@@ -21,16 +23,28 @@ class PredictionController extends AbstractController
     public function __construct(
         private readonly PredictionService $service,
         private readonly GameService $gameService,
+        private readonly CompetitionService $competitionService,
     ) {}
 
     #[Route('', name: 'prediction_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
+        $competitionId = $request->query->get('competition') ?: null;
+        $phaseId = $request->query->get('phase') ?: null;
         $page = max(1, $request->query->getInt('page', 1));
 
+        $phases = null;
+        if ($competitionId !== null) {
+            $phases = $this->competitionService->get($competitionId)->getCompetitionPhases();
+        }
+
         return $this->render('prediction/index.twig', [
-            'predictions' => $this->service->getByUser($this->getUser(), $page, self::PER_PAGE),
-            ...$this->paginationData($this->service->countByUser($this->getUser()), $page),
+            'predictions' => $this->service->getByUser($this->getUser(), $competitionId, $phaseId, $page, self::PER_PAGE),
+            'competitions' => $this->competitionService->getAll(),
+            'phases' => $phases,
+            'selectedCompetition' => $competitionId,
+            'selectedPhase' => $phaseId,
+            ...$this->paginationData($this->service->countByUser($this->getUser(), $competitionId, $phaseId), $page),
         ]);
     }
 
@@ -65,7 +79,12 @@ class PredictionController extends AbstractController
             return $this->redirectToRoute('prediction_index');
         }
 
-        return $this->render('prediction/new.twig', ['form' => $form]);
+        $isKnockout = $prediction->getGame()?->getCompetitionPhase()?->getType() === PhaseTypeEnum::KNOCKOUT;
+
+        return $this->render('prediction/new.twig', [
+            'form' => $form,
+            'isKnockout' => $isKnockout,
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'prediction_edit', methods: ['GET', 'POST'])]
@@ -91,9 +110,12 @@ class PredictionController extends AbstractController
             return $this->redirectToRoute('prediction_index');
         }
 
+        $isKnockout = $prediction->getGame()?->getCompetitionPhase()?->getType() === PhaseTypeEnum::KNOCKOUT;
+
         return $this->render('prediction/edit.twig', [
             'form' => $form,
             'prediction' => $prediction,
+            'isKnockout' => $isKnockout,
         ]);
     }
 

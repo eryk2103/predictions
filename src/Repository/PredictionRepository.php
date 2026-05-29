@@ -23,6 +23,46 @@ class PredictionRepository extends ServiceEntityRepository
         return $this->findOneBy(['predictor' => $user, 'game' => $game]);
     }
 
+    public function findByUserFiltered(User $user, ?int $competitionId, ?int $phaseId, int $page, int $perPage): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->join('p.game', 'g')
+            ->join('g.competitionPhase', 'ph')
+            ->join('ph.Competition', 'c')
+            ->andWhere('p.predictor = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
+
+        if ($phaseId !== null) {
+            $qb->andWhere('ph.id = :phaseId')->setParameter('phaseId', $phaseId);
+        } elseif ($competitionId !== null) {
+            $qb->andWhere('c.id = :competitionId')->setParameter('competitionId', $competitionId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countByUserFiltered(User $user, ?int $competitionId, ?int $phaseId): int
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->join('p.game', 'g')
+            ->join('g.competitionPhase', 'ph')
+            ->join('ph.Competition', 'c')
+            ->andWhere('p.predictor = :user')
+            ->setParameter('user', $user);
+
+        if ($phaseId !== null) {
+            $qb->andWhere('ph.id = :phaseId')->setParameter('phaseId', $phaseId);
+        } elseif ($competitionId !== null) {
+            $qb->andWhere('c.id = :competitionId')->setParameter('competitionId', $competitionId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * @param Game[] $games
      * @return array<int, Prediction> keyed by game id

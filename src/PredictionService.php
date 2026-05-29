@@ -59,19 +59,14 @@ class PredictionService
     }
 
     /** @return Prediction[] */
-    public function getByUser(User $user, int $page = 1, int $perPage = 20): array
+    public function getByUser(User $user, ?int $competitionId = null, ?int $phaseId = null, int $page = 1, int $perPage = 20): array
     {
-        return $this->repository->findBy(
-            ['predictor' => $user],
-            ['id' => 'DESC'],
-            $perPage,
-            ($page - 1) * $perPage,
-        );
+        return $this->repository->findByUserFiltered($user, $competitionId, $phaseId, $page, $perPage);
     }
 
-    public function countByUser(User $user): int
+    public function countByUser(User $user, ?int $competitionId = null, ?int $phaseId = null): int
     {
-        return $this->repository->count(['predictor' => $user]);
+        return $this->repository->countByUserFiltered($user, $competitionId, $phaseId);
     }
 
     public function update(

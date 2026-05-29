@@ -26,7 +26,7 @@
                         {{ form_errors(form.awayScore) }}
                     </div>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-4" id="penalty-fields">
                     <div class="col">
                         {{ form_label(form.homePenalty, 'Home penalties', {label_attr: {class: 'form-label'}}) }}
                         {{ form_widget(form.homePenalty, {attr: {class: 'form-control'}}) }}
@@ -46,4 +46,25 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const homeScore = document.getElementById('{{ form.homeScore.vars.id }}');
+    const awayScore = document.getElementById('{{ form.awayScore.vars.id }}');
+    const penaltyFields = document.getElementById('penalty-fields');
+
+    const isKnockout = {{ isKnockout ? 'true' : 'false' }};
+
+    function togglePenalties() {
+        const equal = homeScore.value !== '' && awayScore.value !== '' && homeScore.value === awayScore.value;
+        const show = isKnockout && equal;
+        penaltyFields.style.display = show ? '' : 'none';
+        penaltyFields.querySelectorAll('input').forEach(i => i.required = show);
+    }
+
+    homeScore.addEventListener('input', togglePenalties);
+    awayScore.addEventListener('input', togglePenalties);
+    togglePenalties();
+</script>
 {% endblock %}
