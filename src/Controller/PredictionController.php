@@ -67,14 +67,19 @@ class PredictionController extends AbstractController
                 return $this->redirectToRoute('prediction_edit', ['id' => $existing->getId()]);
             }
 
-            $this->service->create(
-                $this->getUser(),
-                $prediction->getGame(),
-                $prediction->getHomeScore(),
-                $prediction->getAwayScore(),
-                $prediction->getHomePenalty(),
-                $prediction->getAwayPenalty(),
-            );
+            try {
+                $this->service->create(
+                    $this->getUser(),
+                    $prediction->getGame(),
+                    $prediction->getHomeScore(),
+                    $prediction->getAwayScore(),
+                    $prediction->getHomePenalty(),
+                    $prediction->getAwayPenalty(),
+                );
+            } catch (\LogicException $e) {
+                $this->addFlash('danger', $e->getMessage());
+                return $this->redirectToRoute('prediction_index');
+            }
 
             return $this->redirectToRoute('prediction_index');
         }
@@ -99,13 +104,18 @@ class PredictionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $prediction,
-                $prediction->getHomeScore(),
-                $prediction->getAwayScore(),
-                $prediction->getHomePenalty(),
-                $prediction->getAwayPenalty(),
-            );
+            try {
+                $this->service->update(
+                    $prediction,
+                    $prediction->getHomeScore(),
+                    $prediction->getAwayScore(),
+                    $prediction->getHomePenalty(),
+                    $prediction->getAwayPenalty(),
+                );
+            } catch (\LogicException $e) {
+                $this->addFlash('danger', $e->getMessage());
+                return $this->redirectToRoute('prediction_index');
+            }
 
             return $this->redirectToRoute('prediction_index');
         }

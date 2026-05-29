@@ -21,6 +21,13 @@ class PredictionService
         return $this->repository->findByUserAndGame($user, $game);
     }
 
+    private function assertGameNotStarted(Game $game): void
+    {
+        if ($game->getDatetime() !== null && $game->getDatetime() <= new \DateTime()) {
+            throw new \LogicException('Predictions are not allowed after the game has started.');
+        }
+    }
+
     public function create(
         User $predictor,
         Game $game,
@@ -32,6 +39,8 @@ class PredictionService
         if ($this->repository->findByUserAndGame($predictor, $game) !== null) {
             throw new \LogicException('User already has a prediction for this game.');
         }
+
+        $this->assertGameNotStarted($game);
 
         $prediction = (new Prediction())
             ->setPredictor($predictor)
@@ -76,6 +85,7 @@ class PredictionService
         ?int $homePenalty = null,
         ?int $awayPenalty = null,
     ): Prediction {
+        $this->assertGameNotStarted($prediction->getGame());
         if ($homeScore !== null) {
             $prediction->setHomeScore($homeScore);
         }
