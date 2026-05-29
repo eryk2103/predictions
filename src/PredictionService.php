@@ -78,6 +78,11 @@ class PredictionService
         return $this->repository->countByUserFiltered($user, $competitionId, $phaseId);
     }
 
+    public function sumPointsByUser(User $user, ?int $competitionId = null, ?int $phaseId = null): int
+    {
+        return $this->repository->sumPointsByUser($user, $competitionId, $phaseId);
+    }
+
     public function update(
         Prediction $prediction,
         ?int $homeScore = null,

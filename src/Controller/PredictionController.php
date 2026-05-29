@@ -44,6 +44,7 @@ class PredictionController extends AbstractController
             'phases' => $phases,
             'selectedCompetition' => $competitionId,
             'selectedPhase' => $phaseId,
+            'totalPoints' => $this->service->sumPointsByUser($this->getUser(), $competitionId, $phaseId),
             ...$this->paginationData($this->service->countByUser($this->getUser(), $competitionId, $phaseId), $page),
         ]);
     }

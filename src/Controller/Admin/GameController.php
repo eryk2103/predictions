@@ -4,10 +4,12 @@ namespace App\Controller\Admin;
 
 use App\CompetitionService;
 use App\Entity\Game;
+use App\Enum\GameStatusEnum;
 use App\Form\GameLiveType;
 use App\Form\GameType;
 use App\GameService;
 use App\PaginationTrait;
+use App\PredictionPointService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +21,10 @@ class GameController extends AbstractController
     use PaginationTrait;
 
     public function __construct(
-        private readonly GameService        $service,
-        private readonly CompetitionService $competitionService)
-    {
-    }
+        private readonly GameService           $service,
+        private readonly CompetitionService    $competitionService,
+        private readonly PredictionPointService $pointService,
+    ) {}
 
     #[Route('', name: 'game_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -101,6 +103,10 @@ class GameController extends AbstractController
                 homePenaltyScore: $game->getHomePenaltyScore(),
                 awayPenaltyScore: $game->getAwayPenaltyScore(),
             );
+
+            if ($game->getStatus() === GameStatusEnum::FINISHED) {
+                $this->pointService->calculateForGame($game);
+            }
 
             return $this->redirectToRoute('admin_game_live', ['id' => $id]);
         }

@@ -44,6 +44,25 @@ class PredictionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function sumPointsByUser(User $user, ?int $competitionId, ?int $phaseId): int
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COALESCE(SUM(p.points), 0)')
+            ->join('p.game', 'g')
+            ->join('g.competitionPhase', 'ph')
+            ->join('ph.Competition', 'c')
+            ->andWhere('p.predictor = :user')
+            ->setParameter('user', $user);
+
+        if ($phaseId !== null) {
+            $qb->andWhere('ph.id = :phaseId')->setParameter('phaseId', $phaseId);
+        } elseif ($competitionId !== null) {
+            $qb->andWhere('c.id = :competitionId')->setParameter('competitionId', $competitionId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     public function countByUserFiltered(User $user, ?int $competitionId, ?int $phaseId): int
     {
         $qb = $this->createQueryBuilder('p')

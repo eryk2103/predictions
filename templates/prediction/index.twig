@@ -6,6 +6,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">My Predictions</h1>
+        <span class="fs-5">Total points: <strong>{{ totalPoints }}</strong></span>
     </div>
 
     <form method="get" class="row g-2 align-items-end mb-4">
@@ -53,6 +54,7 @@
                         <th>Date</th>
                         <th>Status</th>
                         <th class="text-center">Prediction</th>
+                        <th class="text-center">Points</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -70,6 +72,13 @@
                             {{ prediction.homeScore }} – {{ prediction.awayScore }}
                             {% if prediction.homePenalty is not null %}
                                 <small class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }} pens)</small>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if prediction.points is not null %}
+                                <span class="fw-bold">{{ prediction.points }}</span>
+                            {% else %}
+                                <span class="text-muted">—</span>
                             {% endif %}
                         </td>
                         <td class="text-end">
