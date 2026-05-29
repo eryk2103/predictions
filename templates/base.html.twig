@@ -32,6 +32,12 @@
                             <a class="nav-link{% if app.request.attributes.get('_route') == 'home_index' %} active{% endif %}"
                                href="{{ path('home_index') }}">Home</a>
                         </li>
+                        {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'prediction_' %} active{% endif %}"
+                               href="{{ path('prediction_index') }}">Predictions</a>
+                        </li>
+                        {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
                         {% set isAdmin = app.request.attributes.get('_route') starts with 'admin_' %}
                         <li class="nav-item dropdown">

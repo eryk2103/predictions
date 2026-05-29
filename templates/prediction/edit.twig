@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Prediction{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <h1 class="h3 mb-1">Edit Prediction</h1>
+            <p class="text-muted mb-4">
+                {{ prediction.game.homeTeam ? prediction.game.homeTeam.shortName : '—' }}
+                vs
+                {{ prediction.game.awayTeam ? prediction.game.awayTeam.shortName : '—' }}
+            </p>
+
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                <div class="row mb-3">
+                    <div class="col">
+                        {{ form_label(form.homeScore, 'Home score', {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.homeScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.homeScore) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.awayScore, 'Away score', {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.awayScore, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.awayScore) }}
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col">
+                        {{ form_label(form.homePenalty, 'Home penalties', {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.homePenalty, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.homePenalty) }}
+                    </div>
+                    <div class="col">
+                        {{ form_label(form.awayPenalty, 'Away penalties', {label_attr: {class: 'form-label'}}) }}
+                        {{ form_widget(form.awayPenalty, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.awayPenalty) }}
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ path('prediction_index') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

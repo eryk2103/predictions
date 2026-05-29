@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Predictions{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">My Predictions</h1>
+    </div>
+
+    {% if predictions is empty %}
+        <p class="text-muted">You have no predictions yet.</p>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Game</th>
+                        <th>Date</th>
+                        <th class="text-center">Prediction</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for prediction in predictions %}
+                    <tr>
+                        <td>
+                            {{ prediction.game.homeTeam ? prediction.game.homeTeam.shortName : '—' }}
+                            vs
+                            {{ prediction.game.awayTeam ? prediction.game.awayTeam.shortName : '—' }}
+                        </td>
+                        <td>{{ prediction.game.datetime ? prediction.game.datetime|date('d M Y H:i') : '—' }}</td>
+                        <td class="text-center fw-bold">
+                            {{ prediction.homeScore }} – {{ prediction.awayScore }}
+                            {% if prediction.homePenalty is not null %}
+                                <small class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }} pens)</small>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ path('prediction_edit', {id: prediction.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <form method="post" action="{{ path('prediction_delete', {id: prediction.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Delete this prediction?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_prediction_' ~ prediction.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {{ include('_pagination.twig', {label: 'predictions'}) }}
+    {% endif %}
+</div>
+{% endblock %}
