@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CompetitionPhaseService;
 use App\CompetitionService;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/competition/{competitionId}/phase')]
+#[Route('/admin/competition/{competitionId}/phase', name: 'admin_')]
 class CompetitionPhaseController extends AbstractController
 {
     public function __construct(
@@ -36,7 +36,7 @@ class CompetitionPhaseController extends AbstractController
                 $phase->isCurrent(),
             );
 
-            return $this->redirectToRoute('competition_show', ['id' => $competitionId]);
+            return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
         }
 
         return $this->render('competition_phase/new.twig', [
@@ -62,7 +62,7 @@ class CompetitionPhaseController extends AbstractController
                 $phase->isCurrent(),
             );
 
-            return $this->redirectToRoute('competition_show', ['id' => $competitionId]);
+            return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
         }
 
         return $this->render('competition_phase/edit.twig', [
@@ -81,6 +81,6 @@ class CompetitionPhaseController extends AbstractController
             $this->phaseService->delete($phase);
         }
 
-        return $this->redirectToRoute('competition_show', ['id' => $competitionId]);
+        return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
     }
 }

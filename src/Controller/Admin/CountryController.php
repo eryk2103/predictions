@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CountryService;
 use App\Entity\Country;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/country')]
+#[Route('/admin/country', name: 'admin_')]
 class CountryController extends AbstractController
 {
     use PaginationTrait;
@@ -40,7 +40,7 @@ class CountryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->service->create($country->getName(), $country->getFlag() ?? '');
 
-            return $this->redirectToRoute('country_index');
+            return $this->redirectToRoute('admin_country_index');
         }
 
         return $this->render('country/new.twig', [
@@ -66,7 +66,7 @@ class CountryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->service->update($country, $country->getName(), $country->getFlag());
 
-            return $this->redirectToRoute('country_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_country_show', ['id' => $id]);
         }
 
         return $this->render('country/edit.twig', [
@@ -84,6 +84,6 @@ class CountryController extends AbstractController
             $this->service->delete($country);
         }
 
-        return $this->redirectToRoute('country_index');
+        return $this->redirectToRoute('admin_country_index');
     }
 }

@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Stadiums</h1>
-        <a href="{{ path('stadium_new') }}" class="btn btn-primary">New stadium</a>
+        <a href="{{ path('admin_stadium_new') }}" class="btn btn-primary">New stadium</a>
     </div>
 
     <div class="table-responsive">
@@ -30,8 +30,8 @@
                     <td>{{ stadium.country ? stadium.country.name : '—' }}</td>
                     <td>{{ stadium.capacity ? stadium.capacity|number_format : '—' }}</td>
                     <td class="text-end">
-                        <a href="{{ path('stadium_show', {id: stadium.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                        <a href="{{ path('stadium_edit', {id: stadium.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{{ path('admin_stadium_show', {id: stadium.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ path('admin_stadium_edit', {id: stadium.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                     </td>
                 </tr>
                 {% else %}

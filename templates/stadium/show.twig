@@ -7,8 +7,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">{{ stadium.name }}</h1>
         <div>
-            <a href="{{ path('stadium_edit', {id: stadium.id}) }}" class="btn btn-primary">Edit</a>
-            <form method="post" action="{{ path('stadium_delete', {id: stadium.id}) }}" class="d-inline"
+            <a href="{{ path('admin_stadium_edit', {id: stadium.id}) }}" class="btn btn-primary">Edit</a>
+            <form method="post" action="{{ path('admin_stadium_delete', {id: stadium.id}) }}" class="d-inline"
                   onsubmit="return confirm('Delete {{ stadium.name }}?')">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete_stadium_' ~ stadium.id) }}">
                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -25,7 +25,7 @@
                 <dt class="col-sm-3">Country</dt>
                 <dd class="col-sm-9">
                     {% if stadium.country %}
-                        <a href="{{ path('country_show', {id: stadium.country.id}) }}">{{ stadium.country.name }}</a>
+                        <a href="{{ path('admin_country_show', {id: stadium.country.id}) }}">{{ stadium.country.name }}</a>
                     {% else %}
                         —
                     {% endif %}
@@ -43,6 +43,6 @@
         </div>
     </div>
 
-    <a href="{{ path('stadium_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
+    <a href="{{ path('admin_stadium_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
 </div>
 {% endblock %}

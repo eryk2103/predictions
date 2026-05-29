@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Team;
 use App\Form\TeamType;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/team')]
+#[Route('/admin/team', name: 'admin_')]
 class TeamController extends AbstractController
 {
     use PaginationTrait;
@@ -48,7 +48,7 @@ class TeamController extends AbstractController
                 $team->getStadium(),
             );
 
-            return $this->redirectToRoute('team_index');
+            return $this->redirectToRoute('admin_team_index');
         }
 
         return $this->render('team/new.twig', [
@@ -83,7 +83,7 @@ class TeamController extends AbstractController
                 $team->getStadium(),
             );
 
-            return $this->redirectToRoute('team_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_team_show', ['id' => $id]);
         }
 
         return $this->render('team/edit.twig', [
@@ -101,6 +101,6 @@ class TeamController extends AbstractController
             $this->service->delete($team);
         }
 
-        return $this->redirectToRoute('team_index');
+        return $this->redirectToRoute('admin_team_index');
     }
 }

@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Countries</h1>
-        <a href="{{ path('country_new') }}" class="btn btn-primary">New country</a>
+        <a href="{{ path('admin_country_new') }}" class="btn btn-primary">New country</a>
     </div>
 
     <div class="table-responsive">
@@ -26,8 +26,8 @@
                     <td>{{ country.name }}</td>
                     <td>{{ country.flag ?: '—' }}</td>
                     <td class="text-end">
-                        <a href="{{ path('country_show', {id: country.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                        <a href="{{ path('country_edit', {id: country.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{{ path('admin_country_show', {id: country.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ path('admin_country_edit', {id: country.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                     </td>
                 </tr>
                 {% else %}

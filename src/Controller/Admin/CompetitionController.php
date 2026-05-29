@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CompetitionService;
 use App\Entity\Competition;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/competition')]
+#[Route('/admin/competition', name: 'admin_')]
 class CompetitionController extends AbstractController
 {
     public function __construct(private readonly CompetitionService $service) {}
@@ -33,7 +33,7 @@ class CompetitionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->service->save($competition);
 
-            return $this->redirectToRoute('competition_index');
+            return $this->redirectToRoute('admin_competition_index');
         }
 
         return $this->render('competition/new.twig', [
@@ -68,7 +68,7 @@ class CompetitionController extends AbstractController
                 $data->getLogo(),
             );
 
-            return $this->redirectToRoute('competition_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_competition_show', ['id' => $id]);
         }
 
         return $this->render('competition/edit.twig', [
@@ -86,6 +86,6 @@ class CompetitionController extends AbstractController
             $this->service->delete($competition);
         }
 
-        return $this->redirectToRoute('competition_index');
+        return $this->redirectToRoute('admin_competition_index');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Stadium;
 use App\Form\StadiumType;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/stadium')]
+#[Route('/admin/stadium', name: 'admin_')]
 class StadiumController extends AbstractController
 {
     use PaginationTrait;
@@ -45,7 +45,7 @@ class StadiumController extends AbstractController
                 $stadium->getCountry(),
             );
 
-            return $this->redirectToRoute('stadium_index');
+            return $this->redirectToRoute('admin_stadium_index');
         }
 
         return $this->render('stadium/new.twig', [
@@ -77,7 +77,7 @@ class StadiumController extends AbstractController
                 $stadium->getCountry(),
             );
 
-            return $this->redirectToRoute('stadium_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_stadium_show', ['id' => $id]);
         }
 
         return $this->render('stadium/edit.twig', [
@@ -95,6 +95,6 @@ class StadiumController extends AbstractController
             $this->service->delete($stadium);
         }
 
-        return $this->redirectToRoute('stadium_index');
+        return $this->redirectToRoute('admin_stadium_index');
     }
 }

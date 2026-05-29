@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Competitions</h1>
-        <a href="{{ path('competition_new') }}" class="btn btn-primary">New competition</a>
+        <a href="{{ path('admin_competition_new') }}" class="btn btn-primary">New competition</a>
     </div>
 
     <div class="table-responsive">
@@ -28,8 +28,8 @@
                     <td>{{ competition.shortName }}</td>
                     <td>{{ competition.startYear }}/{{ competition.endYear }}</td>
                     <td class="text-end">
-                        <a href="{{ path('competition_show', {id: competition.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                        <a href="{{ path('competition_edit', {id: competition.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{{ path('admin_competition_show', {id: competition.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ path('admin_competition_edit', {id: competition.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                     </td>
                 </tr>
                 {% else %}

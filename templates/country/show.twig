@@ -7,8 +7,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">{{ country.name }}</h1>
         <div>
-            <a href="{{ path('country_edit', {id: country.id}) }}" class="btn btn-primary">Edit</a>
-            <form method="post" action="{{ path('country_delete', {id: country.id}) }}" class="d-inline"
+            <a href="{{ path('admin_country_edit', {id: country.id}) }}" class="btn btn-primary">Edit</a>
+            <form method="post" action="{{ path('admin_country_delete', {id: country.id}) }}" class="d-inline"
                   onsubmit="return confirm('Delete {{ country.name }}?')">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete_country_' ~ country.id) }}">
                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -31,6 +31,6 @@
         </div>
     </div>
 
-    <a href="{{ path('country_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
+    <a href="{{ path('admin_country_index') }}" class="btn btn-link px-0 mt-3">← Back to list</a>
 </div>
 {% endblock %}

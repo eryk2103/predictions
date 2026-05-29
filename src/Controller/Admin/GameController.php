@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CompetitionService;
 use App\Entity\Game;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/game')]
+#[Route('/admin/game', name: 'admin_')]
 class GameController extends AbstractController
 {
     use PaginationTrait;
@@ -68,7 +68,7 @@ class GameController extends AbstractController
                 $game->getAwayPenaltyScore(),
             );
 
-            return $this->redirectToRoute('game_index');
+            return $this->redirectToRoute('admin_game_index');
         }
 
         return $this->render('game/new.twig', [
@@ -106,7 +106,7 @@ class GameController extends AbstractController
                 $game->getAwayPenaltyScore(),
             );
 
-            return $this->redirectToRoute('game_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_game_show', ['id' => $id]);
         }
 
         return $this->render('game/edit.twig', [
@@ -124,6 +124,6 @@ class GameController extends AbstractController
             $this->service->delete($game);
         }
 
-        return $this->redirectToRoute('game_index');
+        return $this->redirectToRoute('admin_game_index');
     }
 }

@@ -29,29 +29,30 @@
                 <div class="collapse navbar-collapse" id="navbarMain">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'game' %} active{% endif %}"
-                               href="{{ path('game_index') }}">Games</a>
+                            <a class="nav-link{% if app.request.attributes.get('_route') == 'home_index' %} active{% endif %}"
+                               href="{{ path('home_index') }}">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'competition' %} active{% endif %}"
-                               href="{{ path('competition_index') }}">Competitions</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        {% set isAdmin = app.request.attributes.get('_route') starts with 'admin_' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle{% if isAdmin %} active{% endif %}"
+                               href="#" role="button" data-bs-toggle="dropdown">Admin</a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_game' %} active{% endif %}"
+                                       href="{{ path('admin_game_index') }}">Games</a></li>
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_competition' %} active{% endif %}"
+                                       href="{{ path('admin_competition_index') }}">Competitions</a></li>
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_team' %} active{% endif %}"
+                                       href="{{ path('admin_team_index') }}">Teams</a></li>
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_stadium' %} active{% endif %}"
+                                       href="{{ path('admin_stadium_index') }}">Stadiums</a></li>
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_country' %} active{% endif %}"
+                                       href="{{ path('admin_country_index') }}">Countries</a></li>
+                                <li><a class="dropdown-item{% if app.request.attributes.get('_route') starts with 'admin_standing' %} active{% endif %}"
+                                       href="{{ path('admin_standing_index') }}">Standings</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'team' %} active{% endif %}"
-                               href="{{ path('team_index') }}">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'stadium' %} active{% endif %}"
-                               href="{{ path('stadium_index') }}">Stadiums</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'country' %} active{% endif %}"
-                               href="{{ path('country_index') }}">Countries</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if app.request.attributes.get('_route') starts with 'standing' %} active{% endif %}"
-                               href="{{ path('standing_index') }}">Standings</a>
-                        </li>
+                        {% endif %}
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         {% if app.user %}

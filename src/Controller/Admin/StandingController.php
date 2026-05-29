@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\CompetitionService;
 use App\Entity\Standing;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/standing')]
+#[Route('/admin/standing', name: 'admin_')]
 class StandingController extends AbstractController
 {
     public function __construct(
@@ -66,7 +66,7 @@ class StandingController extends AbstractController
                 $standing->getPoints(),
             );
 
-            return $this->redirectToRoute('standing_index');
+            return $this->redirectToRoute('admin_standing_index');
         }
 
         return $this->render('standing/new.twig', [
@@ -104,7 +104,7 @@ class StandingController extends AbstractController
                 $standing->getPoints(),
             );
 
-            return $this->redirectToRoute('standing_show', ['id' => $id]);
+            return $this->redirectToRoute('admin_standing_show', ['id' => $id]);
         }
 
         return $this->render('standing/edit.twig', [
@@ -122,6 +122,6 @@ class StandingController extends AbstractController
             $this->service->delete($standing);
         }
 
-        return $this->redirectToRoute('standing_index');
+        return $this->redirectToRoute('admin_standing_index');
     }
 }

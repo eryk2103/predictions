@@ -31,7 +31,7 @@
                     </span>
                     <span class="fw-semibold">{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</span>
                     <small class="text-muted text-nowrap">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</small>
-                    <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
+                    <a href="{{ path('admin_game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
                 </div>
             </div>
         {% endfor %}
