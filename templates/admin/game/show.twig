@@ -11,6 +11,7 @@
             {{ game.awayTeam ? game.awayTeam.name : '—' }}
         </h1>
         <div>
+            <a href="{{ path('admin_game_live', {id: game.id}) }}" class="btn btn-info">Start stream</a>
             <a href="{{ path('admin_game_edit', {id: game.id}) }}" class="btn btn-primary">Edit</a>
             <form method="post" action="{{ path('admin_game_delete', {id: game.id}) }}" class="d-inline"
                   onsubmit="return confirm('Delete this game?')">

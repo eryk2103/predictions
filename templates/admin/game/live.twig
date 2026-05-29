@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Live — {{ game.homeTeam ? game.homeTeam.shortName : '?' }} vs {{ game.awayTeam ? game.awayTeam.shortName : '?' }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            {{ game.homeTeam ? game.homeTeam.name : '—' }}
+            vs
+            {{ game.awayTeam ? game.awayTeam.name : '—' }}
+        </h1>
+        <a href="{{ path('admin_game_show', {id: game.id}) }}" class="btn btn-outline-secondary">← Back</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header fw-semibold">Update score &amp; status</div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.status, null, {label_attr: {class: 'form-label'}}) }}
+                            {{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                {{ form_label(form.homeScore, game.homeTeam ? game.homeTeam.shortName ~ ' score' : 'Home score', {label_attr: {class: 'form-label'}}) }}
+                                {{ form_widget(form.homeScore, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.homeScore) }}
+                            </div>
+                            <div class="col">
+                                {{ form_label(form.awayScore, game.awayTeam ? game.awayTeam.shortName ~ ' score' : 'Away score', {label_attr: {class: 'form-label'}}) }}
+                                {{ form_widget(form.awayScore, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.awayScore) }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col">
+                                {{ form_label(form.homePenaltyScore, game.homeTeam ? game.homeTeam.shortName ~ ' pens' : 'Home pens', {label_attr: {class: 'form-label'}}) }}
+                                {{ form_widget(form.homePenaltyScore, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.homePenaltyScore) }}
+                            </div>
+                            <div class="col">
+                                {{ form_label(form.awayPenaltyScore, game.awayTeam ? game.awayTeam.shortName ~ ' pens' : 'Away pens', {label_attr: {class: 'form-label'}}) }}
+                                {{ form_widget(form.awayPenaltyScore, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.awayPenaltyScore) }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card text-center">
+                <div class="card-body py-5">
+                    <div class="mb-2">
+                        <span class="badge text-bg-secondary fs-6">{{ game.status.value|replace({'_': ' '})|title }}</span>
+                    </div>
+                    <div class="row align-items-center mt-3">
+                        <div class="col text-end fs-5 fw-semibold">{{ game.homeTeam ? game.homeTeam.name : '—' }}</div>
+                        <div class="col-auto px-4">
+                            {% if game.homeScore is not null %}
+                                <span class="display-4 fw-bold">{{ game.homeScore }} – {{ game.awayScore }}</span>
+                                {% if game.homePenaltyScore is not null %}
+                                    <div class="text-muted mt-1">({{ game.homePenaltyScore }} – {{ game.awayPenaltyScore }} pens)</div>
+                                {% endif %}
+                            {% else %}
+                                <span class="display-4 fw-bold text-muted">– vs –</span>
+                            {% endif %}
+                        </div>
+                        <div class="col text-start fs-5 fw-semibold">{{ game.awayTeam ? game.awayTeam.name : '—' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

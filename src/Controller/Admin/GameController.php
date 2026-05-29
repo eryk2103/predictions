@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\CompetitionService;
 use App\Entity\Game;
+use App\Form\GameLiveType;
 use App\Form\GameType;
 use App\GameService;
 use App\PaginationTrait;
@@ -81,6 +82,32 @@ class GameController extends AbstractController
     {
         return $this->render('admin/game/show.twig', [
             'game' => $this->service->get($id),
+        ]);
+    }
+
+    #[Route('/{id}/live', name: 'game_live', methods: ['GET', 'POST'])]
+    public function live(int $id, Request $request): Response
+    {
+        $game = $this->service->get($id);
+        $form = $this->createForm(GameLiveType::class, $game);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->service->update(
+                $game,
+                status: $game->getStatus(),
+                homeScore: $game->getHomeScore(),
+                awayScore: $game->getAwayScore(),
+                homePenaltyScore: $game->getHomePenaltyScore(),
+                awayPenaltyScore: $game->getAwayPenaltyScore(),
+            );
+
+            return $this->redirectToRoute('admin_game_live', ['id' => $id]);
+        }
+
+        return $this->render('admin/game/live.twig', [
+            'game' => $game,
+            'form' => $form,
         ]);
     }
 
