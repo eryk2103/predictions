@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game #{{ game.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h3 mb-4">
+        {{ game.homeTeam ? game.homeTeam.name : '—' }}
+        vs
+        {{ game.awayTeam ? game.awayTeam.name : '—' }}
+    </h1>
+
+    <div class="card mb-4">
+        <div class="card-body text-center py-4">
+            <div class="row align-items-center">
+                <div class="col text-end fs-5 fw-semibold">{{ game.homeTeam ? game.homeTeam.name : '—' }}</div>
+                <div class="col-auto px-4">
+                    {% if game.homeScore is not null %}
+                        <span class="display-5 fw-bold">{{ game.homeScore }} – {{ game.awayScore }}</span>
+                        {% if game.homePenaltyScore is not null %}
+                            <div class="text-muted small mt-1">({{ game.homePenaltyScore }} – {{ game.awayPenaltyScore }} pens)</div>
+                        {% endif %}
+                    {% else %}
+                        <span class="display-5 fw-bold text-muted">– vs –</span>
+                    {% endif %}
+                </div>
+                <div class="col text-start fs-5 fw-semibold">{{ game.awayTeam ? game.awayTeam.name : '—' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9"><span class="badge text-bg-secondary">{{ game.status.value }}</span></dd>
+
+                <dt class="col-sm-3">Date &amp; time</dt>
+                <dd class="col-sm-9">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</dd>
+
+                <dt class="col-sm-3">Phase</dt>
+                <dd class="col-sm-9">
+                    {{ game.competitionPhase.getCompetition().getName() }} — {{ game.competitionPhase.name }}
+                </dd>
+
+                {% if game.stadium %}
+                <dt class="col-sm-3">Stadium</dt>
+                <dd class="col-sm-9">{{ game.stadium.name }}</dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+
+    <a href="{{ path('home_index') }}" class="btn btn-link px-0 mt-3">← Back</a>
+</div>
+{% endblock %}
