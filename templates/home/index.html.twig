@@ -32,7 +32,7 @@
                     <span class="fw-semibold">{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</span>
                     <small class="text-nowrap">
                         {% set prediction = predictions[game.id] ?? null %}
-                        {% if prediction and game.datetime and prediction.createdAt < game.datetime %}
+                        {% if prediction %}
                             <span class="text-primary fw-semibold">{{ prediction.homeScore }} – {{ prediction.awayScore }}</span>
                             {% if prediction.homePenalty is not null %}
                                 <span class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }})</span>
