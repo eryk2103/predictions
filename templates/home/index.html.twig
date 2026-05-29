@@ -39,7 +39,13 @@
                             {% endif %}
                         {% endif %}
                     </small>
-                    <small class="text-muted text-nowrap">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</small>
+                    <small class="text-nowrap">
+                        {% if game.status.value != 'scheduled' %}
+                            <span class="badge text-bg-secondary">{{ game.status.value|replace({'_': ' '})|title }}</span>
+                        {% else %}
+                            <span class="text-muted">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</span>
+                        {% endif %}
+                    </small>
                     <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
                 </div>
             </div>

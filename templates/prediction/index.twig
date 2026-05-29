@@ -51,6 +51,7 @@
                     <tr>
                         <th>Game</th>
                         <th>Date</th>
+                        <th>Status</th>
                         <th class="text-center">Prediction</th>
                         <th></th>
                     </tr>
@@ -64,6 +65,7 @@
                             {{ prediction.game.awayTeam ? prediction.game.awayTeam.shortName : '—' }}
                         </td>
                         <td>{{ prediction.game.datetime ? prediction.game.datetime|date('d M Y H:i') : '—' }}</td>
+                        <td><span class="badge text-bg-secondary">{{ prediction.game.status.value|replace({'_': ' '})|title }}</span></td>
                         <td class="text-center fw-bold">
                             {{ prediction.homeScore }} – {{ prediction.awayScore }}
                             {% if prediction.homePenalty is not null %}
@@ -71,12 +73,14 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
-                            <a href="{{ path('prediction_edit', {id: prediction.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <form method="post" action="{{ path('prediction_delete', {id: prediction.id}) }}" class="d-inline"
-                                  onsubmit="return confirm('Delete this prediction?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete_prediction_' ~ prediction.id) }}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                            </form>
+                            {% if not (prediction.game.datetime and date() >= prediction.game.datetime) %}
+                                <a href="{{ path('prediction_edit', {id: prediction.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form method="post" action="{{ path('prediction_delete', {id: prediction.id}) }}" class="d-inline"
+                                      onsubmit="return confirm('Delete this prediction?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_prediction_' ~ prediction.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
