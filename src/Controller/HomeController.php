@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Repository\PredictionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,12 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $games = $this->gameRepository->findByCurrentPhases();
+        $gamesGroupedByPhases = [];
+        foreach ($games as $game) {
+            $phase = $game->getCompetitionPhase();
+            $name = $phase->getCompetition()->getName() . ' - ' . $phase->getName();
+            $gamesGroupedByPhases[$name][] = $game;
+        }
 
         $predictions = [];
         if ($this->getUser()) {
@@ -27,7 +34,7 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/index.html.twig', [
-            'games' => $games,
+            'gamesGrouped' => $gamesGroupedByPhases,
             'predictions' => $predictions,
         ]);
     }

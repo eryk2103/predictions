@@ -3,24 +3,21 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+    <div class="container py-4">
     <h1 class="h3 mb-4">Current games</h1>
 
-    {% if games is empty %}
+    {% if gamesGrouped is empty %}
         <p class="text-muted">No active phase games at the moment.</p>
     {% else %}
-        {% set currentPhaseId = null %}
-        {% for game in games %}
-            {% if game.competitionPhase.id != currentPhaseId %}
-                {% if currentPhaseId is not null %}</div>{% endif %}
-                {% set currentPhaseId = game.competitionPhase.id %}
-                <h5 class="mt-4 mb-2 text-muted fw-semibold">
-                    {{ game.competitionPhase.competition.shortName }} · {{ game.competitionPhase.name }}
-                </h5>
-                <div class="d-flex flex-column gap-2">
-            {% endif %}
+        {% for key, games in gamesGrouped %}
+            <h5 class="mt-4 mb-2 text-muted fw-semibold">
+                {{ key }}
+            </h5>
+            <div class="d-flex flex-column gap-2">
+            {% for game in games %}
             <div class="card">
-                <div class="card-body py-2 px-3" style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto auto; align-items: center; gap: 0.75rem;">
+                <div class="card-body py-2 px-3"
+                     style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto auto; align-items: center; gap: 0.75rem;">
                     <span class="fw-semibold text-end">{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</span>
                     <span class="fw-bold text-center">
                         {% if game.homeScore is not null %}
@@ -33,24 +30,29 @@
                     <small class="text-nowrap">
                         {% set prediction = predictions[game.id] ?? null %}
                         {% if prediction %}
-                            <span class="text-primary fw-semibold">{{ prediction.homeScore }} – {{ prediction.awayScore }}</span>
+                            <span
+                                class="text-primary fw-semibold">{{ prediction.homeScore }} – {{ prediction.awayScore }}</span>
                             {% if prediction.homePenalty is not null %}
-                                <span class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }})</span>
+                                <span
+                                    class="text-muted">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }})</span>
                             {% endif %}
                         {% endif %}
                     </small>
                     <small class="text-nowrap">
                         {% if game.status.value != 'scheduled' %}
-                            <span class="badge text-bg-secondary">{{ game.status.value|replace({'_': ' '})|title }}</span>
+                            <span
+                                class="badge text-bg-secondary">{{ game.status.value|replace({'_': ' '})|title }}</span>
                         {% else %}
                             <span class="text-muted">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</span>
                         {% endif %}
                     </small>
-                    <a href="{{ path('game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
+                    <a href="{{ path('game_show', {id: game.id}) }}"
+                       class="btn btn-sm btn-outline-secondary text-nowrap">View</a>
                 </div>
             </div>
         {% endfor %}
         </div>
+        {% endfor %}
     {% endif %}
-</div>
+    </div>
 {% endblock %}
