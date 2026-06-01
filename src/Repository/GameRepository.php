@@ -21,7 +21,11 @@ class GameRepository extends ServiceEntityRepository
     public function findByCurrentPhases(): array
     {
         return $this->createQueryBuilder('g')
+            ->addSelect('p', 'c', 'ht', 'at')
             ->join('g.competitionPhase', 'p')
+            ->join('p.Competition', 'c')
+            ->leftJoin('g.homeTeam', 'ht')
+            ->leftJoin('g.awayTeam', 'at')
             ->andWhere('p.isCurrent = true')
             ->orderBy('g.datetime', 'ASC')
             ->getQuery()

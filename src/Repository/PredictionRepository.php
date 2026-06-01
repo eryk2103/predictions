@@ -89,6 +89,8 @@ class PredictionRepository extends ServiceEntityRepository
     public function findByUserForGames(User $user, array $games): array
     {
         $predictions = $this->createQueryBuilder('p')
+            ->addSelect('g')
+            ->join('p.game', 'g')
             ->andWhere('p.predictor = :user')
             ->andWhere('p.game IN (:games)')
             ->setParameter('user', $user)
