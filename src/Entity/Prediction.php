@@ -29,9 +29,11 @@ class Prediction
     private ?Game $game = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $homeScore = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $awayScore = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
@@ -96,7 +98,7 @@ class Prediction
         return $this->homeScore;
     }
 
-    public function setHomeScore(int $homeScore): static
+    public function setHomeScore(?int $homeScore): static
     {
         $this->homeScore = $homeScore;
 
@@ -108,7 +110,7 @@ class Prediction
         return $this->awayScore;
     }
 
-    public function setAwayScore(int $awayScore): static
+    public function setAwayScore(?int $awayScore): static
     {
         $this->awayScore = $awayScore;
 

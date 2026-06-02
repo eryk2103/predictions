@@ -13,8 +13,16 @@ class PredictionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('homeScore', IntegerType::class, ['attr' => ['min' => 0]])
-            ->add('awayScore', IntegerType::class, ['attr' => ['min' => 0]])
+            ->add('homeScore', IntegerType::class, [
+                'attr' => [
+                    'min' => 0
+                ],
+            ])
+            ->add('awayScore', IntegerType::class, [
+                'attr' => [
+                    'min' => 0
+                ]
+            ])
             ->add('homePenalty', IntegerType::class, ['required' => false, 'attr' => ['min' => 0]])
             ->add('awayPenalty', IntegerType::class, ['required' => false, 'attr' => ['min' => 0]]);
     }
