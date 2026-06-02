@@ -9,9 +9,12 @@ use App\Exception\CompetitionNotFoundException;
 use App\Repository\CompetitionRepositoryInterface;
 use App\Service\CompetitionService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class CompetitionServiceTest extends TestCase
 {
     private CompetitionRepositoryInterface&MockObject $repository;
@@ -25,6 +28,7 @@ class CompetitionServiceTest extends TestCase
         $this->service = new CompetitionService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsCompetition(): void
     {
         $dto = new CreateCompetitionDto('Premier League', 'PL', 2024, 2025, 'logo.png');
@@ -41,6 +45,7 @@ class CompetitionServiceTest extends TestCase
         $this->assertSame('logo.png', $result->getLogo());
     }
 
+    #[Test]
     public function testCreateWithNullLogo(): void
     {
         $dto = new CreateCompetitionDto('La Liga', 'LL', 2024, 2025);
@@ -53,6 +58,7 @@ class CompetitionServiceTest extends TestCase
         $this->assertNull($result->getLogo());
     }
 
+    #[Test]
     public function testGetReturnsCompetition(): void
     {
         $competition = new Competition();
@@ -61,9 +67,10 @@ class CompetitionServiceTest extends TestCase
         $this->assertSame($competition, $this->service->get(1));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(CompetitionNotFoundException::class);
         $this->expectExceptionMessage('Competition 99 not found.');
@@ -71,6 +78,7 @@ class CompetitionServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $competitions = [new Competition(), new Competition()];
@@ -79,6 +87,7 @@ class CompetitionServiceTest extends TestCase
         $this->assertSame($competitions, $this->service->getAll());
     }
 
+    #[Test]
     public function testUpdateSetsAllFieldsAndFlushes(): void
     {
         $competition = new Competition();
@@ -96,6 +105,7 @@ class CompetitionServiceTest extends TestCase
         $this->assertSame('new.png', $competition->getLogo());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $competition = new Competition();

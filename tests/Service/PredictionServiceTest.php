@@ -14,9 +14,12 @@ use App\Exception\PredictionNotFoundException;
 use App\Repository\PredictionRepositoryInterface;
 use App\Service\PredictionService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class PredictionServiceTest extends TestCase
 {
     private PredictionRepositoryInterface&MockObject $repository;
@@ -35,6 +38,7 @@ class PredictionServiceTest extends TestCase
         return (new Game())->setDatetime(new \DateTime('+1 day'));
     }
 
+    #[Test]
     public function testFindByUserAndGameDelegatesToRepository(): void
     {
         $user = new User();
@@ -49,6 +53,7 @@ class PredictionServiceTest extends TestCase
         $this->assertSame($prediction, $this->service->findByUserAndGame($user, $game));
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsPrediction(): void
     {
         $user = new User();
@@ -69,6 +74,7 @@ class PredictionServiceTest extends TestCase
         $this->assertNull($result->getAwayPenalty());
     }
 
+    #[Test]
     public function testCreateWithPenalties(): void
     {
         $user = new User();
@@ -85,36 +91,39 @@ class PredictionServiceTest extends TestCase
         $this->assertSame(3, $result->getAwayPenalty());
     }
 
+    #[Test]
     public function testCreateThrowsDuplicatePredictionException(): void
     {
         $user = new User();
         $game = $this->futureGame();
 
-        $this->repository->method('findByUserAndGame')->willReturn(new Prediction());
+        $this->repository->expects($this->once())->method('findByUserAndGame')->willReturn(new Prediction());
 
         $this->expectException(DuplicatePredictionException::class);
 
         $this->service->create($user, $game, new CreatePredictionDto(1, 0));
     }
 
+    #[Test]
     public function testCreateThrowsGameAlreadyStartedException(): void
     {
         $user = new User();
         $game = (new Game())->setDatetime(new \DateTime('-1 hour'));
 
-        $this->repository->method('findByUserAndGame')->willReturn(null);
+        $this->repository->expects($this->once())->method('findByUserAndGame')->willReturn(null);
 
         $this->expectException(GameAlreadyStartedException::class);
 
         $this->service->create($user, $game, new CreatePredictionDto(1, 0));
     }
 
+    #[Test]
     public function testCreateAllowsGameWithNoDatetime(): void
     {
         $user = new User();
         $game = new Game();
 
-        $this->repository->method('findByUserAndGame')->willReturn(null);
+        $this->repository->expects($this->once())->method('findByUserAndGame')->willReturn(null);
         $this->em->method('persist');
         $this->em->method('flush');
 
@@ -123,12 +132,14 @@ class PredictionServiceTest extends TestCase
         $this->assertInstanceOf(Prediction::class, $result);
     }
 
+    #[Test]
     public function testCreateExceptionsExtendBusinessRuleException(): void
     {
         $this->assertInstanceOf(BusinessRuleException::class, new DuplicatePredictionException());
         $this->assertInstanceOf(BusinessRuleException::class, new GameAlreadyStartedException());
     }
 
+    #[Test]
     public function testGetReturnsPrediction(): void
     {
         $prediction = new Prediction();
@@ -137,9 +148,10 @@ class PredictionServiceTest extends TestCase
         $this->assertSame($prediction, $this->service->get(7));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(PredictionNotFoundException::class);
         $this->expectExceptionMessage('Prediction 99 not found.');
@@ -147,6 +159,7 @@ class PredictionServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetByUserDelegatesToRepository(): void
     {
         $user = new User();
@@ -160,6 +173,7 @@ class PredictionServiceTest extends TestCase
         $this->assertSame($predictions, $this->service->getByUser($user, 1, 2, 1, 20));
     }
 
+    #[Test]
     public function testCountByUserDelegatesToRepository(): void
     {
         $user = new User();
@@ -172,6 +186,7 @@ class PredictionServiceTest extends TestCase
         $this->assertSame(5, $this->service->countByUser($user));
     }
 
+    #[Test]
     public function testSumPointsByUserDelegatesToRepository(): void
     {
         $user = new User();
@@ -184,6 +199,7 @@ class PredictionServiceTest extends TestCase
         $this->assertSame(42, $this->service->sumPointsByUser($user));
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $prediction = (new Prediction())
@@ -204,6 +220,7 @@ class PredictionServiceTest extends TestCase
         $this->assertSame(3, $prediction->getAwayPenalty());
     }
 
+    #[Test]
     public function testUpdateThrowsGameAlreadyStartedException(): void
     {
         $prediction = (new Prediction())
@@ -214,6 +231,7 @@ class PredictionServiceTest extends TestCase
         $this->service->update($prediction, new UpdatePredictionDto(1, 0));
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $prediction = new Prediction();

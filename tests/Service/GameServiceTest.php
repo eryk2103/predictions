@@ -14,9 +14,12 @@ use App\Repository\GameRepositoryInterface;
 use App\Service\GameService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class GameServiceTest extends TestCase
 {
     private GameRepositoryInterface&MockObject $repository;
@@ -30,6 +33,7 @@ class GameServiceTest extends TestCase
         $this->service = new GameService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsGame(): void
     {
         $phase = new CompetitionPhase();
@@ -55,6 +59,7 @@ class GameServiceTest extends TestCase
         $this->assertSame(0, $result->getAwayScore());
     }
 
+    #[Test]
     public function testCreateWithNullOptionals(): void
     {
         $phase = new CompetitionPhase();
@@ -73,6 +78,7 @@ class GameServiceTest extends TestCase
         $this->assertNull($result->getAwayScore());
     }
 
+    #[Test]
     public function testGetReturnsGame(): void
     {
         $game = new Game();
@@ -81,9 +87,10 @@ class GameServiceTest extends TestCase
         $this->assertSame($game, $this->service->get(10));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(GameNotFoundException::class);
         $this->expectExceptionMessage('Game 99 not found.');
@@ -91,6 +98,7 @@ class GameServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $paginator = $this->createMock(Paginator::class);
@@ -102,14 +110,14 @@ class GameServiceTest extends TestCase
         $this->assertSame($paginator, $this->service->getAll(1, 2, 1, 20));
     }
 
+    #[Test]
     public function testGetGroupedByPhaseGroupsByPhaseId(): void
     {
         $phase1 = new CompetitionPhase();
         $phase2 = new CompetitionPhase();
 
-        // Use reflection to set IDs since there are no setters
         $setId = static function (CompetitionPhase $phase, int $id): void {
-            $ref = new \ReflectionProperty($phase, 'id');
+            $ref = new \ReflectionProperty(CompetitionPhase::class, 'id');
             $ref->setValue($phase, $id);
         };
         $setId($phase1, 1);
@@ -119,7 +127,7 @@ class GameServiceTest extends TestCase
         $game2 = (new Game())->setCompetitionPhase($phase1)->setStatus(GameStatusEnum::SCHEDULED);
         $game3 = (new Game())->setCompetitionPhase($phase2)->setStatus(GameStatusEnum::SCHEDULED);
 
-        $this->repository->method('findAllByCompetition')->with(5)->willReturn([$game1, $game2, $game3]);
+        $this->repository->expects($this->once())->method('findAllByCompetition')->with(5)->willReturn([$game1, $game2, $game3]);
 
         $result = $this->service->getGroupedByPhase(5);
 
@@ -128,6 +136,7 @@ class GameServiceTest extends TestCase
         $this->assertCount(1, $result[2]);
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $game = new Game();
@@ -145,6 +154,7 @@ class GameServiceTest extends TestCase
         $this->assertSame(1, $game->getAwayScore());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $game = new Game();

@@ -4,9 +4,12 @@ namespace App\Tests\Service;
 
 use App\Repository\UserRepositoryInterface;
 use App\Service\RankingService;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class RankingServiceTest extends TestCase
 {
     private UserRepositoryInterface&MockObject $repository;
@@ -18,6 +21,7 @@ class RankingServiceTest extends TestCase
         $this->service = new RankingService($this->repository);
     }
 
+    #[Test]
     public function testGetRankingsDelegatesToRepository(): void
     {
         $rankings = [
@@ -33,6 +37,7 @@ class RankingServiceTest extends TestCase
         $this->assertSame($rankings, $this->service->getRankings());
     }
 
+    #[Test]
     public function testGetRankingsWithFilters(): void
     {
         $this->repository->expects($this->once())

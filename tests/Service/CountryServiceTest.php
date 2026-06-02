@@ -10,9 +10,12 @@ use App\Repository\CountryRepositoryInterface;
 use App\Service\CountryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class CountryServiceTest extends TestCase
 {
     private CountryRepositoryInterface&MockObject $repository;
@@ -26,6 +29,7 @@ class CountryServiceTest extends TestCase
         $this->service = new CountryService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsCountry(): void
     {
         $dto = new CreateCountryDto('Poland', 'pl.png');
@@ -39,6 +43,7 @@ class CountryServiceTest extends TestCase
         $this->assertSame('pl.png', $result->getFlag());
     }
 
+    #[Test]
     public function testGetReturnsCountry(): void
     {
         $country = new Country();
@@ -47,9 +52,10 @@ class CountryServiceTest extends TestCase
         $this->assertSame($country, $this->service->get(1));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(5)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(5)->willReturn(null);
 
         $this->expectException(CountryNotFoundException::class);
         $this->expectExceptionMessage('Country 5 not found.');
@@ -57,6 +63,7 @@ class CountryServiceTest extends TestCase
         $this->service->get(5);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $paginator = $this->createMock(Paginator::class);
@@ -65,6 +72,7 @@ class CountryServiceTest extends TestCase
         $this->assertSame($paginator, $this->service->getAll(2, 20));
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $country = new Country();
@@ -79,6 +87,7 @@ class CountryServiceTest extends TestCase
         $this->assertSame('de.png', $country->getFlag());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $country = new Country();

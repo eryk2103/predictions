@@ -8,9 +8,12 @@ use App\Enum\GameStatusEnum;
 use App\Repository\PredictionRepositoryInterface;
 use App\Service\PredictionPointService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class PredictionPointServiceTest extends TestCase
 {
     private PredictionRepositoryInterface&MockObject $repository;
@@ -43,6 +46,7 @@ class PredictionPointServiceTest extends TestCase
             ->setAwayPenalty($awayPenalty);
     }
 
+    #[Test]
     public function testSkipsCalculationWhenHomeScoreIsNull(): void
     {
         $game = (new Game())->setStatus(GameStatusEnum::IN_PROGRESS)->setAwayScore(1);
@@ -53,6 +57,7 @@ class PredictionPointServiceTest extends TestCase
         $this->service->calculateForGame($game);
     }
 
+    #[Test]
     public function testSkipsCalculationWhenAwayScoreIsNull(): void
     {
         $game = (new Game())->setStatus(GameStatusEnum::IN_PROGRESS)->setHomeScore(1);
@@ -62,6 +67,7 @@ class PredictionPointServiceTest extends TestCase
         $this->service->calculateForGame($game);
     }
 
+    #[Test]
     public function testExactScoreMatchGivesThreePoints(): void
     {
         $game = $this->gameWithScore(2, 1);
@@ -75,6 +81,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(3, $prediction->getPoints());
     }
 
+    #[Test]
     public function testCorrectOutcomeGivesOnePoint(): void
     {
         $game = $this->gameWithScore(3, 1);
@@ -87,6 +94,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(1, $prediction->getPoints());
     }
 
+    #[Test]
     public function testCorrectDrawOutcomeGivesOnePoint(): void
     {
         $game = $this->gameWithScore(1, 1);
@@ -99,6 +107,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(1, $prediction->getPoints());
     }
 
+    #[Test]
     public function testWrongOutcomeGivesZeroPoints(): void
     {
         $game = $this->gameWithScore(2, 0);
@@ -111,6 +120,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(0, $prediction->getPoints());
     }
 
+    #[Test]
     public function testExactDrawWithCorrectPenaltyWinnerGivesFourPoints(): void
     {
         $game = $this->gameWithScore(1, 1, 5, 3);
@@ -123,6 +133,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(4, $prediction->getPoints());
     }
 
+    #[Test]
     public function testExactDrawWithWrongPenaltyWinnerGivesThreePoints(): void
     {
         $game = $this->gameWithScore(1, 1, 3, 5);
@@ -135,6 +146,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(3, $prediction->getPoints());
     }
 
+    #[Test]
     public function testExactDrawWithNoPenaltyPredictionGivesThreePoints(): void
     {
         $game = $this->gameWithScore(0, 0, 4, 3);
@@ -147,6 +159,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(3, $prediction->getPoints());
     }
 
+    #[Test]
     public function testExactScoreWithNoPenaltyScoreInGameGivesThreePoints(): void
     {
         $game = $this->gameWithScore(1, 1);
@@ -159,6 +172,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(3, $prediction->getPoints());
     }
 
+    #[Test]
     public function testCalculatesPointsForMultiplePredictions(): void
     {
         $game = $this->gameWithScore(2, 0);
@@ -176,6 +190,7 @@ class PredictionPointServiceTest extends TestCase
         $this->assertSame(0, $wrong->getPoints());
     }
 
+    #[Test]
     public function testFlushesOnceForMultiplePredictions(): void
     {
         $game = $this->gameWithScore(1, 0);

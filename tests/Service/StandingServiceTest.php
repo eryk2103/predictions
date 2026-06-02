@@ -11,9 +11,12 @@ use App\Exception\StandingNotFoundException;
 use App\Repository\StandingRepositoryInterface;
 use App\Service\StandingService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class StandingServiceTest extends TestCase
 {
     private StandingRepositoryInterface&MockObject $repository;
@@ -27,6 +30,7 @@ class StandingServiceTest extends TestCase
         $this->service = new StandingService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsStanding(): void
     {
         $competition = new Competition();
@@ -50,6 +54,7 @@ class StandingServiceTest extends TestCase
         $this->assertSame(23, $result->getPoints());
     }
 
+    #[Test]
     public function testGetReturnsStanding(): void
     {
         $standing = new Standing();
@@ -58,9 +63,10 @@ class StandingServiceTest extends TestCase
         $this->assertSame($standing, $this->service->get(5));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(StandingNotFoundException::class);
         $this->expectExceptionMessage('Standing 99 not found.');
@@ -68,6 +74,7 @@ class StandingServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $standings = [new Standing()];
@@ -76,6 +83,7 @@ class StandingServiceTest extends TestCase
         $this->assertSame($standings, $this->service->getAll(3));
     }
 
+    #[Test]
     public function testGetAllWithNoFilterDelegatesToRepository(): void
     {
         $this->repository->expects($this->once())->method('findByCompetition')->with(null)->willReturn([]);
@@ -83,6 +91,7 @@ class StandingServiceTest extends TestCase
         $this->service->getAll();
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $standing = new Standing();
@@ -107,6 +116,7 @@ class StandingServiceTest extends TestCase
         $this->assertSame(16, $standing->getPoints());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $standing = new Standing();

@@ -11,9 +11,12 @@ use App\Exception\CompetitionPhaseNotFoundException;
 use App\Repository\CompetitionPhaseRepositoryInterface;
 use App\Service\CompetitionPhaseService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class CompetitionPhaseServiceTest extends TestCase
 {
     private CompetitionPhaseRepositoryInterface&MockObject $repository;
@@ -27,6 +30,7 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->service = new CompetitionPhaseService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsPhase(): void
     {
         $competition = new Competition();
@@ -44,6 +48,7 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->assertFalse($result->isCurrent());
     }
 
+    #[Test]
     public function testCreateWithIsCurrentTrue(): void
     {
         $competition = new Competition();
@@ -57,6 +62,7 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->assertTrue($result->isCurrent());
     }
 
+    #[Test]
     public function testGetReturnsPhase(): void
     {
         $phase = new CompetitionPhase();
@@ -65,9 +71,10 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->assertSame($phase, $this->service->get(42));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(CompetitionPhaseNotFoundException::class);
         $this->expectExceptionMessage('Competition phase 99 not found.');
@@ -75,9 +82,10 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testUpdateSetsAllFieldsAndFlushes(): void
     {
-        $phase = (new CompetitionPhase())
+        $phase = new CompetitionPhase()
             ->setName('Old')
             ->setType(PhaseTypeEnum::GROUP)
             ->setSequence(1)
@@ -96,6 +104,7 @@ class CompetitionPhaseServiceTest extends TestCase
         $this->assertTrue($phase->isCurrent());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $phase = new CompetitionPhase();

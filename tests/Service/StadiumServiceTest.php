@@ -11,9 +11,11 @@ use App\Repository\StadiumRepositoryInterface;
 use App\Service\StadiumService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-
+#[AllowMockObjectsWithoutExpectations]
 class StadiumServiceTest extends TestCase
 {
     private StadiumRepositoryInterface&MockObject $repository;
@@ -27,6 +29,7 @@ class StadiumServiceTest extends TestCase
         $this->service = new StadiumService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsStadium(): void
     {
         $country = new Country();
@@ -43,6 +46,7 @@ class StadiumServiceTest extends TestCase
         $this->assertSame($country, $result->getCountry());
     }
 
+    #[Test]
     public function testCreateWithNullOptionals(): void
     {
         $dto = new CreateStadiumDto('Arena', 'Warsaw');
@@ -56,6 +60,7 @@ class StadiumServiceTest extends TestCase
         $this->assertNull($result->getCountry());
     }
 
+    #[Test]
     public function testGetReturnsStadium(): void
     {
         $stadium = new Stadium();
@@ -64,9 +69,10 @@ class StadiumServiceTest extends TestCase
         $this->assertSame($stadium, $this->service->get(3));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(StadiumNotFoundException::class);
         $this->expectExceptionMessage('Stadium 99 not found.');
@@ -74,6 +80,7 @@ class StadiumServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $paginator = $this->createMock(Paginator::class);
@@ -82,6 +89,7 @@ class StadiumServiceTest extends TestCase
         $this->assertSame($paginator, $this->service->getAll(1, 20));
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $stadium = new Stadium();
@@ -99,6 +107,7 @@ class StadiumServiceTest extends TestCase
         $this->assertSame($country, $stadium->getCountry());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $stadium = new Stadium();

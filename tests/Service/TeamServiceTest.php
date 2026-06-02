@@ -12,9 +12,12 @@ use App\Repository\TeamRepositoryInterface;
 use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 class TeamServiceTest extends TestCase
 {
     private TeamRepositoryInterface&MockObject $repository;
@@ -28,6 +31,7 @@ class TeamServiceTest extends TestCase
         $this->service = new TeamService($this->repository, $this->em);
     }
 
+    #[Test]
     public function testCreatePersistsAndReturnsTeam(): void
     {
         $country = new Country();
@@ -48,6 +52,7 @@ class TeamServiceTest extends TestCase
         $this->assertSame($stadium, $result->getStadium());
     }
 
+    #[Test]
     public function testCreateWithNullOptionals(): void
     {
         $dto = new CreateTeamDto('Chelsea', 'CHE', 'CHE', 'chelsea.png');
@@ -62,6 +67,7 @@ class TeamServiceTest extends TestCase
         $this->assertNull($result->getStadium());
     }
 
+    #[Test]
     public function testGetReturnsTeam(): void
     {
         $team = new Team();
@@ -70,9 +76,10 @@ class TeamServiceTest extends TestCase
         $this->assertSame($team, $this->service->get(7));
     }
 
+    #[Test]
     public function testGetThrowsNotFoundExceptionWhenMissing(): void
     {
-        $this->repository->method('find')->with(99)->willReturn(null);
+        $this->repository->expects($this->once())->method('find')->with(99)->willReturn(null);
 
         $this->expectException(TeamNotFoundException::class);
         $this->expectExceptionMessage('Team 99 not found.');
@@ -80,6 +87,7 @@ class TeamServiceTest extends TestCase
         $this->service->get(99);
     }
 
+    #[Test]
     public function testGetAllDelegatesToRepository(): void
     {
         $paginator = $this->createMock(Paginator::class);
@@ -88,6 +96,7 @@ class TeamServiceTest extends TestCase
         $this->assertSame($paginator, $this->service->getAll(1, 20));
     }
 
+    #[Test]
     public function testUpdateSetsFieldsAndFlushes(): void
     {
         $team = new Team();
@@ -109,6 +118,7 @@ class TeamServiceTest extends TestCase
         $this->assertSame($stadium, $team->getStadium());
     }
 
+    #[Test]
     public function testDeleteRemovesAndFlushes(): void
     {
         $team = new Team();
