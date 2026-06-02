@@ -10,7 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Country>
  */
-class CountryRepository extends ServiceEntityRepository
+class CountryRepository extends ServiceEntityRepository implements CountryRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

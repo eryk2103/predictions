@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Dto\CreateTeamDto;
+use App\Dto\UpdateTeamDto;
 use App\Entity\Team;
 use App\Form\TeamType;
-use App\Service\PaginationTrait;
-use App\Service\TeamService;
+use App\Controller\Trait\PaginationTrait;
+use App\Service\TeamServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ class TeamController extends AbstractController
 {
     use PaginationTrait;
 
-    public function __construct(private readonly TeamService $service) {}
+    public function __construct(private readonly TeamServiceInterface $service) {}
 
     #[Route('', name: 'team_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -38,15 +40,15 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->create(
+            $this->service->create(new CreateTeamDto(
                 $team->getName(),
                 $team->getShortName(),
                 $team->getCode(),
-                $team->getLogo() ?? '',
+                $team->getLogo(),
                 $team->getCity(),
                 $team->getCountry(),
                 $team->getStadium(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_team_index');
         }
@@ -72,8 +74,7 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $team,
+            $this->service->update($team, new UpdateTeamDto(
                 $team->getName(),
                 $team->getShortName(),
                 $team->getCode(),
@@ -81,7 +82,7 @@ class TeamController extends AbstractController
                 $team->getCity(),
                 $team->getCountry(),
                 $team->getStadium(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_team_show', ['id' => $id]);
         }

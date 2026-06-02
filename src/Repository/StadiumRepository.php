@@ -10,7 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Stadium>
  */
-class StadiumRepository extends ServiceEntityRepository
+class StadiumRepository extends ServiceEntityRepository implements StadiumRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

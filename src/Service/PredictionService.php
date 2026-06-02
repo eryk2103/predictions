@@ -2,17 +2,21 @@
 
 namespace App\Service;
 
+use App\Dto\CreatePredictionDto;
+use App\Dto\UpdatePredictionDto;
 use App\Entity\Game;
 use App\Entity\Prediction;
 use App\Entity\User;
-use App\Repository\PredictionRepository;
+use App\Exception\DuplicatePredictionException;
+use App\Exception\GameAlreadyStartedException;
+use App\Exception\PredictionNotFoundException;
+use App\Repository\PredictionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class PredictionService
+class PredictionService implements PredictionServiceInterface
 {
     public function __construct(
-        private readonly PredictionRepository $repository,
+        private readonly PredictionRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
@@ -24,20 +28,14 @@ class PredictionService
     private function assertGameNotStarted(Game $game): void
     {
         if ($game->getDatetime() !== null && $game->getDatetime() <= new \DateTime()) {
-            throw new \LogicException('Predictions are not allowed after the game has started.');
+            throw new GameAlreadyStartedException();
         }
     }
 
-    public function create(
-        User $predictor,
-        Game $game,
-        int $homeScore,
-        int $awayScore,
-        ?int $homePenalty = null,
-        ?int $awayPenalty = null,
-    ): Prediction {
+    public function create(User $predictor, Game $game, CreatePredictionDto $dto): Prediction
+    {
         if ($this->repository->findByUserAndGame($predictor, $game) !== null) {
-            throw new \LogicException('User already has a prediction for this game.');
+            throw new DuplicatePredictionException();
         }
 
         $this->assertGameNotStarted($game);
@@ -45,10 +43,10 @@ class PredictionService
         $prediction = (new Prediction())
             ->setPredictor($predictor)
             ->setGame($game)
-            ->setHomeScore($homeScore)
-            ->setAwayScore($awayScore)
-            ->setHomePenalty($homePenalty)
-            ->setAwayPenalty($awayPenalty);
+            ->setHomeScore($dto->homeScore)
+            ->setAwayScore($dto->awayScore)
+            ->setHomePenalty($dto->homePenalty)
+            ->setAwayPenalty($dto->awayPenalty);
 
         $this->em->persist($prediction);
         $this->em->flush();
@@ -61,7 +59,7 @@ class PredictionService
         $prediction = $this->repository->find($id);
 
         if ($prediction === null) {
-            throw new NotFoundHttpException(sprintf('Prediction %d not found.', $id));
+            throw new PredictionNotFoundException($id);
         }
 
         return $prediction;
@@ -83,22 +81,15 @@ class PredictionService
         return $this->repository->sumPointsByUser($user, $competitionId, $phaseId);
     }
 
-    public function update(
-        Prediction $prediction,
-        ?int $homeScore = null,
-        ?int $awayScore = null,
-        ?int $homePenalty = null,
-        ?int $awayPenalty = null,
-    ): Prediction {
+    public function update(Prediction $prediction, UpdatePredictionDto $dto): Prediction
+    {
         $this->assertGameNotStarted($prediction->getGame());
-        if ($homeScore !== null) {
-            $prediction->setHomeScore($homeScore);
-        }
-        if ($awayScore !== null) {
-            $prediction->setAwayScore($awayScore);
-        }
-        $prediction->setHomePenalty($homePenalty);
-        $prediction->setAwayPenalty($awayPenalty);
+
+        $prediction
+            ->setHomeScore($dto->homeScore)
+            ->setAwayScore($dto->awayScore)
+            ->setHomePenalty($dto->homePenalty)
+            ->setAwayPenalty($dto->awayPenalty);
 
         $this->em->flush();
 

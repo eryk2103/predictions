@@ -2,14 +2,16 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\CompetitionService;
+use App\Dto\CreateGameDto;
+use App\Dto\UpdateGameDto;
 use App\Entity\Game;
 use App\Enum\GameStatusEnum;
 use App\Form\GameLiveType;
 use App\Form\GameType;
-use App\Service\GameService;
-use App\Service\PaginationTrait;
-use App\Service\PredictionPointService;
+use App\Service\CompetitionServiceInterface;
+use App\Service\GameServiceInterface;
+use App\Controller\Trait\PaginationTrait;
+use App\Service\PredictionPointServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +23,9 @@ class GameController extends AbstractController
     use PaginationTrait;
 
     public function __construct(
-        private readonly GameService           $service,
-        private readonly CompetitionService    $competitionService,
-        private readonly PredictionPointService $pointService,
+        private readonly GameServiceInterface $service,
+        private readonly CompetitionServiceInterface $competitionService,
+        private readonly PredictionPointServiceInterface $pointService,
     ) {}
 
     #[Route('', name: 'game_index', methods: ['GET'])]
@@ -58,7 +60,7 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->create(
+            $this->service->create(new CreateGameDto(
                 $game->getCompetitionPhase(),
                 $game->getStatus(),
                 $game->getHomeTeam(),
@@ -69,7 +71,7 @@ class GameController extends AbstractController
                 $game->getAwayScore(),
                 $game->getHomePenaltyScore(),
                 $game->getAwayPenaltyScore(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_game_index');
         }
@@ -95,14 +97,18 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $game,
-                status: $game->getStatus(),
-                homeScore: $game->getHomeScore(),
-                awayScore: $game->getAwayScore(),
-                homePenaltyScore: $game->getHomePenaltyScore(),
-                awayPenaltyScore: $game->getAwayPenaltyScore(),
-            );
+            $this->service->update($game, new UpdateGameDto(
+                $game->getCompetitionPhase(),
+                $game->getStatus(),
+                $game->getHomeTeam(),
+                $game->getAwayTeam(),
+                $game->getDatetime(),
+                $game->getStadium(),
+                $game->getHomeScore(),
+                $game->getAwayScore(),
+                $game->getHomePenaltyScore(),
+                $game->getAwayPenaltyScore(),
+            ));
 
             if ($game->getStatus() === GameStatusEnum::FINISHED) {
                 $this->pointService->calculateForGame($game);
@@ -125,8 +131,7 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $game,
+            $this->service->update($game, new UpdateGameDto(
                 $game->getCompetitionPhase(),
                 $game->getStatus(),
                 $game->getHomeTeam(),
@@ -137,7 +142,7 @@ class GameController extends AbstractController
                 $game->getAwayScore(),
                 $game->getHomePenaltyScore(),
                 $game->getAwayPenaltyScore(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_game_show', ['id' => $id]);
         }

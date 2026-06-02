@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Enum\PhaseTypeEnum;
 use App\Repository\PredictionRepository;
 use Doctrine\DBAL\Types\Types;

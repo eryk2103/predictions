@@ -2,27 +2,28 @@
 
 namespace App\Service;
 
-use App\Entity\Country;
+use App\Dto\CreateStadiumDto;
+use App\Dto\UpdateStadiumDto;
 use App\Entity\Stadium;
-use App\Repository\StadiumRepository;
+use App\Exception\StadiumNotFoundException;
+use App\Repository\StadiumRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StadiumService
+class StadiumService implements StadiumServiceInterface
 {
     public function __construct(
-        private readonly StadiumRepository $repository,
+        private readonly StadiumRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(string $name, string $city, ?int $capacity, ?Country $country): Stadium
+    public function create(CreateStadiumDto $dto): Stadium
     {
         $stadium = (new Stadium())
-            ->setName($name)
-            ->setCity($city)
-            ->setCapacity($capacity)
-            ->setCountry($country);
+            ->setName($dto->name)
+            ->setCity($dto->city)
+            ->setCapacity($dto->capacity)
+            ->setCountry($dto->country);
 
         $this->em->persist($stadium);
         $this->em->flush();
@@ -35,7 +36,7 @@ class StadiumService
         $stadium = $this->repository->find($id);
 
         if ($stadium === null) {
-            throw new NotFoundHttpException(sprintf('Stadium %d not found.', $id));
+            throw new StadiumNotFoundException($id);
         }
 
         return $stadium;
@@ -46,25 +47,13 @@ class StadiumService
         return $this->repository->findPaginated($page, $perPage);
     }
 
-    public function update(
-        Stadium $stadium,
-        ?string $name = null,
-        ?string $city = null,
-        ?int $capacity = null,
-        ?Country $country = null,
-    ): Stadium {
-        if ($name !== null) {
-            $stadium->setName($name);
-        }
-        if ($city !== null) {
-            $stadium->setCity($city);
-        }
-        if ($capacity !== null) {
-            $stadium->setCapacity($capacity);
-        }
-        if ($country !== null) {
-            $stadium->setCountry($country);
-        }
+    public function update(Stadium $stadium, UpdateStadiumDto $dto): Stadium
+    {
+        $stadium
+            ->setName($dto->name)
+            ->setCity($dto->city)
+            ->setCapacity($dto->capacity)
+            ->setCountry($dto->country);
 
         $this->em->flush();
 

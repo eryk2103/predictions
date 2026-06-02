@@ -10,7 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Game>
  */
-class GameRepository extends ServiceEntityRepository
+class GameRepository extends ServiceEntityRepository implements GameRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

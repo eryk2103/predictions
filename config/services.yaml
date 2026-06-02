@@ -21,3 +21,24 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Repository\CompetitionRepositoryInterface: '@App\Repository\CompetitionRepository'
+    App\Repository\CompetitionPhaseRepositoryInterface: '@App\Repository\CompetitionPhaseRepository'
+    App\Repository\CountryRepositoryInterface: '@App\Repository\CountryRepository'
+    App\Repository\GameRepositoryInterface: '@App\Repository\GameRepository'
+    App\Repository\PredictionRepositoryInterface: '@App\Repository\PredictionRepository'
+    App\Repository\StadiumRepositoryInterface: '@App\Repository\StadiumRepository'
+    App\Repository\StandingRepositoryInterface: '@App\Repository\StandingRepository'
+    App\Repository\TeamRepositoryInterface: '@App\Repository\TeamRepository'
+    App\Repository\UserRepositoryInterface: '@App\Repository\UserRepository'
+
+    App\Service\CompetitionServiceInterface: '@App\Service\CompetitionService'
+    App\Service\CompetitionPhaseServiceInterface: '@App\Service\CompetitionPhaseService'
+    App\Service\CountryServiceInterface: '@App\Service\CountryService'
+    App\Service\GameServiceInterface: '@App\Service\GameService'
+    App\Service\PredictionServiceInterface: '@App\Service\PredictionService'
+    App\Service\PredictionPointServiceInterface: '@App\Service\PredictionPointService'
+    App\Service\RankingServiceInterface: '@App\Service\RankingService'
+    App\Service\StadiumServiceInterface: '@App\Service\StadiumService'
+    App\Service\StandingServiceInterface: '@App\Service\StandingService'
+    App\Service\TeamServiceInterface: '@App\Service\TeamService'

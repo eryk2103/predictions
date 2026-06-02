@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\CompetitionPhaseService;
-use App\Service\CompetitionService;
+use App\Dto\CreateCompetitionPhaseDto;
+use App\Dto\UpdateCompetitionPhaseDto;
 use App\Entity\CompetitionPhase;
 use App\Form\CompetitionPhaseType;
+use App\Service\CompetitionPhaseServiceInterface;
+use App\Service\CompetitionServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,8 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class CompetitionPhaseController extends AbstractController
 {
     public function __construct(
-        private readonly CompetitionService $competitionService,
-        private readonly CompetitionPhaseService $phaseService,
+        private readonly CompetitionServiceInterface $competitionService,
+        private readonly CompetitionPhaseServiceInterface $phaseService,
     ) {}
 
     #[Route('/new', name: 'competition_phase_new', methods: ['GET', 'POST'])]
@@ -30,10 +32,12 @@ class CompetitionPhaseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->phaseService->create(
                 $competition,
-                $phase->getName(),
-                $phase->getType(),
-                $phase->getSequence(),
-                $phase->isCurrent(),
+                new CreateCompetitionPhaseDto(
+                    $phase->getName(),
+                    $phase->getType(),
+                    $phase->getSequence(),
+                    $phase->isCurrent(),
+                ),
             );
 
             return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);
@@ -56,10 +60,12 @@ class CompetitionPhaseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->phaseService->update(
                 $phase,
-                $phase->getName(),
-                $phase->getType(),
-                $phase->getSequence(),
-                $phase->isCurrent(),
+                new UpdateCompetitionPhaseDto(
+                    $phase->getName(),
+                    $phase->getType(),
+                    $phase->getSequence(),
+                    $phase->isCurrent(),
+                ),
             );
 
             return $this->redirectToRoute('admin_competition_show', ['id' => $competitionId]);

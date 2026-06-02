@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\CompetitionService;
+use App\Dto\CreateStandingDto;
+use App\Dto\UpdateStandingDto;
 use App\Entity\Standing;
 use App\Enum\PhaseTypeEnum;
 use App\Form\StandingType;
-use App\Service\GameService;
-use App\Service\StandingService;
+use App\Service\CompetitionServiceInterface;
+use App\Service\GameServiceInterface;
+use App\Service\StandingServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +19,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class StandingController extends AbstractController
 {
     public function __construct(
-        private readonly StandingService    $service,
-        private readonly CompetitionService $competitionService,
-        private readonly GameService        $gameService,
+        private readonly StandingServiceInterface $service,
+        private readonly CompetitionServiceInterface $competitionService,
+        private readonly GameServiceInterface $gameService,
     ) {}
 
     #[Route('', name: 'standing_index', methods: ['GET'])]
@@ -53,7 +55,7 @@ class StandingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->create(
+            $this->service->create(new CreateStandingDto(
                 $standing->getCompetition(),
                 $standing->getTeam(),
                 $standing->getPosition(),
@@ -64,7 +66,7 @@ class StandingController extends AbstractController
                 $standing->getGoals(),
                 $standing->getGoalsAgainst(),
                 $standing->getPoints(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_standing_index');
         }
@@ -90,8 +92,7 @@ class StandingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $standing,
+            $this->service->update($standing, new UpdateStandingDto(
                 $standing->getCompetition(),
                 $standing->getTeam(),
                 $standing->getPosition(),
@@ -102,7 +103,7 @@ class StandingController extends AbstractController
                 $standing->getGoals(),
                 $standing->getGoalsAgainst(),
                 $standing->getPoints(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_standing_show', ['id' => $id]);
         }

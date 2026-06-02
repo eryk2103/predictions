@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,12 +21,15 @@ class Team
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $shortName = null;
 
     #[ORM\Column(length: 3)]
+    #[Assert\NotBlank]
     private ?string $code = null;
 
     #[ORM\ManyToOne]
@@ -67,7 +72,7 @@ class Team
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -79,7 +84,7 @@ class Team
         return $this->shortName;
     }
 
-    public function setShortName(string $shortName): static
+    public function setShortName(?string $shortName): static
     {
         $this->shortName = $shortName;
 
@@ -91,7 +96,7 @@ class Team
         return $this->code;
     }
 
-    public function setCode(string $code): static
+    public function setCode(?string $code): static
     {
         $this->code = $code;
 
@@ -139,7 +144,7 @@ class Team
         return $this->logo;
     }
 
-    public function setLogo(string $logo): static
+    public function setLogo(?string $logo): static
     {
         $this->logo = $logo;
 

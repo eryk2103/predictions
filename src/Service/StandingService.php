@@ -2,46 +2,33 @@
 
 namespace App\Service;
 
-use App\Entity\Competition;
+use App\Dto\CreateStandingDto;
+use App\Dto\UpdateStandingDto;
 use App\Entity\Standing;
-use App\Entity\Team;
-use App\Repository\StandingRepository;
+use App\Exception\StandingNotFoundException;
+use App\Repository\StandingRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StandingService
+class StandingService implements StandingServiceInterface
 {
     public function __construct(
-        private readonly StandingRepository     $repository,
+        private readonly StandingRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
-    )
-    {
-    }
+    ) {}
 
-    public function create(
-        Competition $competition,
-        Team        $team,
-        int         $position,
-        int         $played,
-        int         $won,
-        int         $drawn,
-        int         $lost,
-        int         $goals,
-        int         $goalsAgainst,
-        int         $points,
-    ): Standing
+    public function create(CreateStandingDto $dto): Standing
     {
         $standing = (new Standing())
-            ->setCompetition($competition)
-            ->setTeam($team)
-            ->setPosition($position)
-            ->setPlayed($played)
-            ->setWon($won)
-            ->setDrawn($drawn)
-            ->setLost($lost)
-            ->setGoals($goals)
-            ->setGoalsAgainst($goalsAgainst)
-            ->setPoints($points);
+            ->setCompetition($dto->competition)
+            ->setTeam($dto->team)
+            ->setPosition($dto->position)
+            ->setPlayed($dto->played)
+            ->setWon($dto->won)
+            ->setDrawn($dto->drawn)
+            ->setLost($dto->lost)
+            ->setGoals($dto->goals)
+            ->setGoalsAgainst($dto->goalsAgainst)
+            ->setPoints($dto->points);
 
         $this->em->persist($standing);
         $this->em->flush();
@@ -54,7 +41,7 @@ class StandingService
         $standing = $this->repository->find($id);
 
         if ($standing === null) {
-            throw new NotFoundHttpException(sprintf('Standing %d not found.', $id));
+            throw new StandingNotFoundException($id);
         }
 
         return $standing;
@@ -66,31 +53,19 @@ class StandingService
         return $this->repository->findByCompetition($competitionId);
     }
 
-    public function update(
-        Standing    $standing,
-        Competition $competition,
-        Team        $team,
-        int         $position,
-        int         $played,
-        int         $won,
-        int         $drawn,
-        int         $lost,
-        int         $goals,
-        int         $goalsAgainst,
-        int         $points,
-    ): Standing
+    public function update(Standing $standing, UpdateStandingDto $dto): Standing
     {
         $standing
-            ->setCompetition($competition)
-            ->setTeam($team)
-            ->setPosition($position)
-            ->setPlayed($played)
-            ->setWon($won)
-            ->setDrawn($drawn)
-            ->setLost($lost)
-            ->setGoals($goals)
-            ->setGoalsAgainst($goalsAgainst)
-            ->setPoints($points);
+            ->setCompetition($dto->competition)
+            ->setTeam($dto->team)
+            ->setPosition($dto->position)
+            ->setPlayed($dto->played)
+            ->setWon($dto->won)
+            ->setDrawn($dto->drawn)
+            ->setLost($dto->lost)
+            ->setGoals($dto->goals)
+            ->setGoalsAgainst($dto->goalsAgainst)
+            ->setPoints($dto->points);
 
         $this->em->flush();
 

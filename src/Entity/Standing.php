@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Repository\StandingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: StandingRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,34 +21,44 @@ class Standing
 
     #[ORM\ManyToOne(inversedBy: 'standings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?Competition $competition = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?Team $team = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $position = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $played = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $won = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $drawn = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $lost = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $goals = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $goalsAgainst = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $points = null;
 
     public function getId(): ?int
@@ -83,7 +95,7 @@ class Standing
         return $this->position;
     }
 
-    public function setPosition(int $position): static
+    public function setPosition(?int $position): static
     {
         $this->position = $position;
 
@@ -95,7 +107,7 @@ class Standing
         return $this->played;
     }
 
-    public function setPlayed(int $played): static
+    public function setPlayed(?int $played): static
     {
         $this->played = $played;
 
@@ -107,7 +119,7 @@ class Standing
         return $this->won;
     }
 
-    public function setWon(int $won): static
+    public function setWon(?int $won): static
     {
         $this->won = $won;
 
@@ -119,7 +131,7 @@ class Standing
         return $this->drawn;
     }
 
-    public function setDrawn(int $drawn): static
+    public function setDrawn(?int $drawn): static
     {
         $this->drawn = $drawn;
 
@@ -131,7 +143,7 @@ class Standing
         return $this->lost;
     }
 
-    public function setLost(int $lost): static
+    public function setLost(?int $lost): static
     {
         $this->lost = $lost;
 
@@ -143,7 +155,7 @@ class Standing
         return $this->goals;
     }
 
-    public function setGoals(int $goals): static
+    public function setGoals(?int $goals): static
     {
         $this->goals = $goals;
 
@@ -155,7 +167,7 @@ class Standing
         return $this->goalsAgainst;
     }
 
-    public function setGoalsAgainst(int $goalsAgainst): static
+    public function setGoalsAgainst(?int $goalsAgainst): static
     {
         $this->goalsAgainst = $goalsAgainst;
 
@@ -167,7 +179,7 @@ class Standing
         return $this->points;
     }
 
-    public function setPoints(int $points): static
+    public function setPoints(?int $points): static
     {
         $this->points = $points;
 

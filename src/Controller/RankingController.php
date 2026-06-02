@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\CompetitionService;
-use App\Service\RankingService;
+use App\Service\CompetitionServiceInterface;
+use App\Service\RankingServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class RankingController extends AbstractController
 {
     public function __construct(
-        private readonly RankingService $service,
-        private readonly CompetitionService $competitionService,
+        private readonly RankingServiceInterface $service,
+        private readonly CompetitionServiceInterface $competitionService,
     ) {}
 
     #[Route('', name: 'ranking_index', methods: ['GET'])]

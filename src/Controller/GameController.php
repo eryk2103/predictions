@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\GameService;
-use App\Repository\PredictionRepository;
+use App\Service\GameServiceInterface;
+use App\Repository\PredictionRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,8 +12,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class GameController extends AbstractController
 {
     public function __construct(
-        private readonly GameService $service,
-        private readonly PredictionRepository $predictionRepository,
+        private readonly GameServiceInterface $service,
+        private readonly PredictionRepositoryInterface $predictionRepository,
     ) {}
 
     #[Route('/{id}', name: 'game_show', methods: ['GET'])]

@@ -2,28 +2,29 @@
 
 namespace App\Service;
 
+use App\Dto\CreateCompetitionPhaseDto;
+use App\Dto\UpdateCompetitionPhaseDto;
 use App\Entity\Competition;
 use App\Entity\CompetitionPhase;
-use App\Enum\PhaseTypeEnum;
-use App\Repository\CompetitionPhaseRepository;
+use App\Exception\CompetitionPhaseNotFoundException;
+use App\Repository\CompetitionPhaseRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CompetitionPhaseService
+class CompetitionPhaseService implements CompetitionPhaseServiceInterface
 {
     public function __construct(
-        private readonly CompetitionPhaseRepository $repository,
+        private readonly CompetitionPhaseRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(Competition $competition, string $name, PhaseTypeEnum $type, int $sequence, bool $isCurrent = false): CompetitionPhase
+    public function create(Competition $competition, CreateCompetitionPhaseDto $dto): CompetitionPhase
     {
         $phase = (new CompetitionPhase())
             ->setCompetition($competition)
-            ->setName($name)
-            ->setType($type)
-            ->setSequence($sequence)
-            ->setIsCurrent($isCurrent);
+            ->setName($dto->name)
+            ->setType($dto->type)
+            ->setSequence($dto->sequence)
+            ->setIsCurrent($dto->isCurrent);
 
         $this->em->persist($phase);
         $this->em->flush();
@@ -36,26 +37,18 @@ class CompetitionPhaseService
         $phase = $this->repository->find($id);
 
         if ($phase === null) {
-            throw new NotFoundHttpException(sprintf('Competition phase %d not found.', $id));
+            throw new CompetitionPhaseNotFoundException($id);
         }
 
         return $phase;
     }
 
-    public function update(CompetitionPhase $phase, ?string $name = null, ?PhaseTypeEnum $type = null, ?int $sequence = null, ?bool $isCurrent = null): CompetitionPhase
+    public function update(CompetitionPhase $phase, UpdateCompetitionPhaseDto $dto): CompetitionPhase
     {
-        if ($name !== null) {
-            $phase->setName($name);
-        }
-        if ($type !== null) {
-            $phase->setType($type);
-        }
-        if ($sequence !== null) {
-            $phase->setSequence($sequence);
-        }
-        if ($isCurrent !== null) {
-            $phase->setIsCurrent($isCurrent);
-        }
+        $phase->setName($dto->name)
+            ->setType($dto->type)
+            ->setSequence($dto->sequence)
+            ->setIsCurrent($dto->isCurrent);
 
         $this->em->flush();
 

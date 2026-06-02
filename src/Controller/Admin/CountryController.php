@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\CountryService;
+use App\Dto\CreateCountryDto;
+use App\Dto\UpdateCountryDto;
 use App\Entity\Country;
 use App\Form\CountryType;
-use App\Service\PaginationTrait;
+use App\Service\CountryServiceInterface;
+use App\Controller\Trait\PaginationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ class CountryController extends AbstractController
 {
     use PaginationTrait;
 
-    public function __construct(private readonly CountryService $service) {}
+    public function __construct(private readonly CountryServiceInterface $service) {}
 
     #[Route('', name: 'country_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -38,7 +40,10 @@ class CountryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->create($country->getName(), $country->getFlag() ?? '');
+            $this->service->create(new CreateCountryDto(
+                $country->getName(),
+                $country->getFlag(),
+            ));
 
             return $this->redirectToRoute('admin_country_index');
         }
@@ -64,7 +69,10 @@ class CountryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update($country, $country->getName(), $country->getFlag());
+            $this->service->update($country, new UpdateCountryDto(
+                $country->getName(),
+                $country->getFlag(),
+            ));
 
             return $this->redirectToRoute('admin_country_show', ['id' => $id]);
         }

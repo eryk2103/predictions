@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<CompetitionPhase>
  */
-class CompetitionPhaseRepository extends ServiceEntityRepository
+class CompetitionPhaseRepository extends ServiceEntityRepository implements CompetitionPhaseRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -2,24 +2,26 @@
 
 namespace App\Service;
 
+use App\Dto\CreateCountryDto;
+use App\Dto\UpdateCountryDto;
 use App\Entity\Country;
-use App\Repository\CountryRepository;
+use App\Exception\CountryNotFoundException;
+use App\Repository\CountryRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CountryService
+class CountryService implements CountryServiceInterface
 {
     public function __construct(
-        private readonly CountryRepository $repository,
+        private readonly CountryRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(string $name, string $flag): Country
+    public function create(CreateCountryDto $dto): Country
     {
         $country = (new Country())
-            ->setName($name)
-            ->setFlag($flag);
+            ->setName($dto->name)
+            ->setFlag($dto->flag);
 
         $this->em->persist($country);
         $this->em->flush();
@@ -32,7 +34,7 @@ class CountryService
         $country = $this->repository->find($id);
 
         if ($country === null) {
-            throw new NotFoundHttpException(sprintf('Country %d not found.', $id));
+            throw new CountryNotFoundException($id);
         }
 
         return $country;
@@ -43,14 +45,11 @@ class CountryService
         return $this->repository->findPaginated($page, $perPage);
     }
 
-    public function update(Country $country, ?string $name = null, ?string $flag = null): Country
+    public function update(Country $country, UpdateCountryDto $dto): Country
     {
-        if ($name !== null) {
-            $country->setName($name);
-        }
-        if ($flag !== null) {
-            $country->setFlag($flag);
-        }
+        $country
+            ->setName($dto->name)
+            ->setFlag($dto->flag);
 
         $this->em->flush();
 

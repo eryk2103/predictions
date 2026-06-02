@@ -2,35 +2,29 @@
 
 namespace App\Service;
 
+use App\Dto\CreateCompetitionDto;
+use App\Dto\UpdateCompetitionDto;
 use App\Entity\Competition;
-use App\Repository\CompetitionRepository;
+use App\Exception\CompetitionNotFoundException;
+use App\Repository\CompetitionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CompetitionService
+class CompetitionService implements CompetitionServiceInterface
 {
-    public function __construct(private readonly CompetitionRepository  $repository,
-                                private readonly EntityManagerInterface $em)
-    {
-    }
+    public function __construct(
+        private readonly CompetitionRepositoryInterface $repository,
+        private readonly EntityManagerInterface $em,
+    ) {}
 
-    public function create(string $name, string $shortName, int $startYear, int $endYear, ?string $logo = null): Competition
+    public function create(CreateCompetitionDto $dto): Competition
     {
         $competition = (new Competition())
-            ->setName($name)
-            ->setShortName($shortName)
-            ->setStartYear($startYear)
-            ->setEndYear($endYear)
-            ->setLogo($logo);
+            ->setName($dto->name)
+            ->setShortName($dto->shortName)
+            ->setStartYear($dto->startYear)
+            ->setEndYear($dto->endYear)
+            ->setLogo($dto->logo);
 
-        $this->em->persist($competition);
-        $this->em->flush();
-
-        return $competition;
-    }
-
-    public function save(Competition $competition): Competition
-    {
         $this->em->persist($competition);
         $this->em->flush();
 
@@ -42,7 +36,7 @@ class CompetitionService
         $competition = $this->repository->find($id);
 
         if ($competition === null) {
-            throw new NotFoundHttpException(sprintf('Competition %d not found.', $id));
+            throw new CompetitionNotFoundException($id);
         }
 
         return $competition;
@@ -54,24 +48,14 @@ class CompetitionService
         return $this->repository->findAll();
     }
 
-    public function update(Competition $competition, ?string $name = null, ?string $shortName = null,
-                           ?int $startYear = null, ?int $endYear = null, ?string $logo = null): Competition
+    public function update(Competition $competition, UpdateCompetitionDto $dto): Competition
     {
-        if ($name !== null) {
-            $competition->setName($name);
-        }
-        if ($shortName !== null) {
-            $competition->setShortName($shortName);
-        }
-        if ($startYear !== null) {
-            $competition->setStartYear($startYear);
-        }
-        if ($endYear !== null) {
-            $competition->setEndYear($endYear);
-        }
-        if ($logo !== null) {
-            $competition->setLogo($logo);
-        }
+        $competition
+            ->setName($dto->name)
+            ->setShortName($dto->shortName)
+            ->setStartYear($dto->startYear)
+            ->setEndYear($dto->endYear)
+            ->setLogo($dto->logo);
 
         $this->em->flush();
 

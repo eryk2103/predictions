@@ -2,46 +2,34 @@
 
 namespace App\Service;
 
-use App\Entity\CompetitionPhase;
+use App\Dto\CreateGameDto;
+use App\Dto\UpdateGameDto;
 use App\Entity\Game;
-use App\Entity\Stadium;
-use App\Entity\Team;
-use App\Enum\GameStatusEnum;
-use App\Repository\GameRepository;
+use App\Exception\GameNotFoundException;
+use App\Repository\GameRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GameService
+class GameService implements GameServiceInterface
 {
     public function __construct(
-        private readonly GameRepository $repository,
+        private readonly GameRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(
-        CompetitionPhase $competitionPhase,
-        GameStatusEnum $status,
-        ?Team $homeTeam = null,
-        ?Team $awayTeam = null,
-        ?\DateTime $datetime = null,
-        ?Stadium $stadium = null,
-        ?int $homeScore = null,
-        ?int $awayScore = null,
-        ?int $homePenaltyScore = null,
-        ?int $awayPenaltyScore = null,
-    ): Game {
+    public function create(CreateGameDto $dto): Game
+    {
         $game = (new Game())
-            ->setCompetitionPhase($competitionPhase)
-            ->setStatus($status)
-            ->setHomeTeam($homeTeam)
-            ->setAwayTeam($awayTeam)
-            ->setDatetime($datetime)
-            ->setStadium($stadium)
-            ->setHomeScore($homeScore)
-            ->setAwayScore($awayScore)
-            ->setHomePenaltyScore($homePenaltyScore)
-            ->setAwayPenaltyScore($awayPenaltyScore);
+            ->setCompetitionPhase($dto->competitionPhase)
+            ->setStatus($dto->status)
+            ->setHomeTeam($dto->homeTeam)
+            ->setAwayTeam($dto->awayTeam)
+            ->setDatetime($dto->datetime)
+            ->setStadium($dto->stadium)
+            ->setHomeScore($dto->homeScore)
+            ->setAwayScore($dto->awayScore)
+            ->setHomePenaltyScore($dto->homePenaltyScore)
+            ->setAwayPenaltyScore($dto->awayPenaltyScore);
 
         $this->em->persist($game);
         $this->em->flush();
@@ -54,7 +42,7 @@ class GameService
         $game = $this->repository->find($id);
 
         if ($game === null) {
-            throw new NotFoundHttpException(sprintf('Game %d not found.', $id));
+            throw new GameNotFoundException($id);
         }
 
         return $game;
@@ -76,49 +64,19 @@ class GameService
         return $grouped;
     }
 
-    public function update(
-        Game $game,
-        ?CompetitionPhase $competitionPhase = null,
-        ?GameStatusEnum $status = null,
-        ?Team $homeTeam = null,
-        ?Team $awayTeam = null,
-        ?\DateTime $datetime = null,
-        ?Stadium $stadium = null,
-        ?int $homeScore = null,
-        ?int $awayScore = null,
-        ?int $homePenaltyScore = null,
-        ?int $awayPenaltyScore = null,
-    ): Game {
-        if ($competitionPhase !== null) {
-            $game->setCompetitionPhase($competitionPhase);
-        }
-        if ($status !== null) {
-            $game->setStatus($status);
-        }
-        if ($homeTeam !== null) {
-            $game->setHomeTeam($homeTeam);
-        }
-        if ($awayTeam !== null) {
-            $game->setAwayTeam($awayTeam);
-        }
-        if ($datetime !== null) {
-            $game->setDatetime($datetime);
-        }
-        if ($stadium !== null) {
-            $game->setStadium($stadium);
-        }
-        if ($homeScore !== null) {
-            $game->setHomeScore($homeScore);
-        }
-        if ($awayScore !== null) {
-            $game->setAwayScore($awayScore);
-        }
-        if ($homePenaltyScore !== null) {
-            $game->setHomePenaltyScore($homePenaltyScore);
-        }
-        if ($awayPenaltyScore !== null) {
-            $game->setAwayPenaltyScore($awayPenaltyScore);
-        }
+    public function update(Game $game, UpdateGameDto $dto): Game
+    {
+        $game
+            ->setCompetitionPhase($dto->competitionPhase)
+            ->setStatus($dto->status)
+            ->setHomeTeam($dto->homeTeam)
+            ->setAwayTeam($dto->awayTeam)
+            ->setDatetime($dto->datetime)
+            ->setStadium($dto->stadium)
+            ->setHomeScore($dto->homeScore)
+            ->setAwayScore($dto->awayScore)
+            ->setHomePenaltyScore($dto->homePenaltyScore)
+            ->setAwayPenaltyScore($dto->awayPenaltyScore);
 
         $this->em->flush();
 

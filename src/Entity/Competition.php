@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Repository\CompetitionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompetitionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -20,15 +22,19 @@ class Competition
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $shortName = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $startYear = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $endYear = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -63,7 +69,7 @@ class Competition
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -75,7 +81,7 @@ class Competition
         return $this->shortName;
     }
 
-    public function setShortName(string $shortName): static
+    public function setShortName(?string $shortName): static
     {
         $this->shortName = $shortName;
 
@@ -87,7 +93,7 @@ class Competition
         return $this->startYear;
     }
 
-    public function setStartYear(int $startYear): static
+    public function setStartYear(?int $startYear): static
     {
         $this->startYear = $startYear;
 
@@ -99,7 +105,7 @@ class Competition
         return $this->endYear;
     }
 
-    public function setEndYear(int $endYear): static
+    public function setEndYear(?int $endYear): static
     {
         $this->endYear = $endYear;
 

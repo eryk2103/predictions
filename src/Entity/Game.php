@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Enum\GameStatusEnum;
 use App\Repository\GameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -38,6 +40,7 @@ class Game
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?CompetitionPhase $competitionPhase = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
@@ -47,6 +50,7 @@ class Game
     private ?\DateTime $datetime = null;
 
     #[ORM\Column(enumType: GameStatusEnum::class)]
+    #[Assert\NotNull]
     private ?GameStatusEnum $status = null;
 
     public function getId(): ?int
@@ -167,7 +171,7 @@ class Game
         return $this->status;
     }
 
-    public function setStatus(GameStatusEnum $status): static
+    public function setStatus(?GameStatusEnum $status): static
     {
         $this->status = $status;
 

@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Dto\CreateStadiumDto;
+use App\Dto\UpdateStadiumDto;
 use App\Entity\Stadium;
 use App\Form\StadiumType;
-use App\Service\PaginationTrait;
-use App\Service\StadiumService;
+use App\Controller\Trait\PaginationTrait;
+use App\Service\StadiumServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ class StadiumController extends AbstractController
 {
     use PaginationTrait;
 
-    public function __construct(private readonly StadiumService $service) {}
+    public function __construct(private readonly StadiumServiceInterface $service) {}
 
     #[Route('', name: 'stadium_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -38,12 +40,12 @@ class StadiumController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->create(
+            $this->service->create(new CreateStadiumDto(
                 $stadium->getName(),
                 $stadium->getCity(),
                 $stadium->getCapacity(),
                 $stadium->getCountry(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_stadium_index');
         }
@@ -69,13 +71,12 @@ class StadiumController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->update(
-                $stadium,
+            $this->service->update($stadium, new UpdateStadiumDto(
                 $stadium->getName(),
                 $stadium->getCity(),
                 $stadium->getCapacity(),
                 $stadium->getCountry(),
-            );
+            ));
 
             return $this->redirectToRoute('admin_stadium_show', ['id' => $id]);
         }

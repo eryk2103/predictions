@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampTrait;
 use App\Enum\PhaseTypeEnum;
 use App\Repository\CompetitionPhaseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompetitionPhaseRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,12 +21,15 @@ class CompetitionPhase
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
     private ?int $sequence = null;
 
     #[ORM\Column(enumType: PhaseTypeEnum::class)]
+    #[Assert\NotNull]
     private ?PhaseTypeEnum $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'competitionPhases')]
@@ -44,7 +49,7 @@ class CompetitionPhase
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -56,7 +61,7 @@ class CompetitionPhase
         return $this->sequence;
     }
 
-    public function setSequence(int $sequence): static
+    public function setSequence(?int $sequence): static
     {
         $this->sequence = $sequence;
 
@@ -68,7 +73,7 @@ class CompetitionPhase
         return $this->type;
     }
 
-    public function setType(PhaseTypeEnum $type): static
+    public function setType(?PhaseTypeEnum $type): static
     {
         $this->type = $type;
 

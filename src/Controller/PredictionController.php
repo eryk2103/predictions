@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
-use App\Service\CompetitionService;
+use App\Dto\CreatePredictionDto;
+use App\Dto\UpdatePredictionDto;
 use App\Entity\Prediction;
+use App\Exception\BusinessRuleException;
 use App\Enum\PhaseTypeEnum;
 use App\Form\PredictionType;
-use App\Service\GameService;
-use App\Service\PaginationTrait;
-use App\Service\PredictionService;
+use App\Service\CompetitionServiceInterface;
+use App\Service\GameServiceInterface;
+use App\Controller\Trait\PaginationTrait;
+use App\Service\PredictionServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +24,9 @@ class PredictionController extends AbstractController
 {
     use PaginationTrait;
     public function __construct(
-        private readonly PredictionService $service,
-        private readonly GameService $gameService,
-        private readonly CompetitionService $competitionService,
+        private readonly PredictionServiceInterface $service,
+        private readonly GameServiceInterface $gameService,
+        private readonly CompetitionServiceInterface $competitionService,
     ) {}
 
     #[Route('', name: 'prediction_index', methods: ['GET'])]
@@ -72,12 +75,14 @@ class PredictionController extends AbstractController
                 $this->service->create(
                     $this->getUser(),
                     $prediction->getGame(),
-                    $prediction->getHomeScore(),
-                    $prediction->getAwayScore(),
-                    $prediction->getHomePenalty(),
-                    $prediction->getAwayPenalty(),
+                    new CreatePredictionDto(
+                        $prediction->getHomeScore(),
+                        $prediction->getAwayScore(),
+                        $prediction->getHomePenalty(),
+                        $prediction->getAwayPenalty(),
+                    ),
                 );
-            } catch (\LogicException $e) {
+            } catch (BusinessRuleException $e) {
                 $this->addFlash('danger', $e->getMessage());
                 return $this->redirectToRoute('prediction_index');
             }
@@ -108,12 +113,14 @@ class PredictionController extends AbstractController
             try {
                 $this->service->update(
                     $prediction,
-                    $prediction->getHomeScore(),
-                    $prediction->getAwayScore(),
-                    $prediction->getHomePenalty(),
-                    $prediction->getAwayPenalty(),
+                    new UpdatePredictionDto(
+                        $prediction->getHomeScore(),
+                        $prediction->getAwayScore(),
+                        $prediction->getHomePenalty(),
+                        $prediction->getAwayPenalty(),
+                    ),
                 );
-            } catch (\LogicException $e) {
+            } catch (BusinessRuleException $e) {
                 $this->addFlash('danger', $e->getMessage());
                 return $this->redirectToRoute('prediction_index');
             }

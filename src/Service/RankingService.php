@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Repository\UserRepository;
+use App\Repository\UserRepositoryInterface;
 
-class RankingService
+class RankingService implements RankingServiceInterface
 {
-    public function __construct(private readonly UserRepository $repository) {}
+    public function __construct(private readonly UserRepositoryInterface $repository) {}
 
     /** @return array<int, array{id: int, email: string, points: int}> */
     public function getRankings(?int $competitionId = null, ?int $phaseId = null): array

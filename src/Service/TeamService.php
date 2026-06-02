@@ -2,38 +2,31 @@
 
 namespace App\Service;
 
-use App\Entity\Country;
-use App\Entity\Stadium;
+use App\Dto\CreateTeamDto;
+use App\Dto\UpdateTeamDto;
 use App\Entity\Team;
-use App\Repository\TeamRepository;
+use App\Exception\TeamNotFoundException;
+use App\Repository\TeamRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class TeamService
+class TeamService implements TeamServiceInterface
 {
     public function __construct(
-        private readonly TeamRepository $repository,
+        private readonly TeamRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function create(
-        string $name,
-        string $shortName,
-        string $code,
-        string $logo,
-        ?string $city = null,
-        ?Country $country = null,
-        ?Stadium $stadium = null,
-    ): Team {
+    public function create(CreateTeamDto $dto): Team
+    {
         $team = (new Team())
-            ->setName($name)
-            ->setShortName($shortName)
-            ->setCode($code)
-            ->setLogo($logo)
-            ->setCity($city)
-            ->setCountry($country)
-            ->setStadium($stadium);
+            ->setName($dto->name)
+            ->setShortName($dto->shortName)
+            ->setCode($dto->code)
+            ->setLogo($dto->logo)
+            ->setCity($dto->city)
+            ->setCountry($dto->country)
+            ->setStadium($dto->stadium);
 
         $this->em->persist($team);
         $this->em->flush();
@@ -46,7 +39,7 @@ class TeamService
         $team = $this->repository->find($id);
 
         if ($team === null) {
-            throw new NotFoundHttpException(sprintf('Team %d not found.', $id));
+            throw new TeamNotFoundException($id);
         }
 
         return $team;
@@ -57,37 +50,16 @@ class TeamService
         return $this->repository->findPaginated($page, $perPage);
     }
 
-    public function update(
-        Team $team,
-        ?string $name = null,
-        ?string $shortName = null,
-        ?string $code = null,
-        ?string $logo = null,
-        ?string $city = null,
-        ?Country $country = null,
-        ?Stadium $stadium = null,
-    ): Team {
-        if ($name !== null) {
-            $team->setName($name);
-        }
-        if ($shortName !== null) {
-            $team->setShortName($shortName);
-        }
-        if ($code !== null) {
-            $team->setCode($code);
-        }
-        if ($logo !== null) {
-            $team->setLogo($logo);
-        }
-        if ($city !== null) {
-            $team->setCity($city);
-        }
-        if ($country !== null) {
-            $team->setCountry($country);
-        }
-        if ($stadium !== null) {
-            $team->setStadium($stadium);
-        }
+    public function update(Team $team, UpdateTeamDto $dto): Team
+    {
+        $team
+            ->setName($dto->name)
+            ->setShortName($dto->shortName)
+            ->setCode($dto->code)
+            ->setLogo($dto->logo)
+            ->setCity($dto->city)
+            ->setCountry($dto->country)
+            ->setStadium($dto->stadium);
 
         $this->em->flush();
 

@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Game;
-use App\Repository\GameRepository;
-use App\Repository\PredictionRepository;
+use App\Repository\GameRepositoryInterface;
+use App\Repository\PredictionRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -13,8 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     public function __construct(
-        private readonly GameRepository $gameRepository,
-        private readonly PredictionRepository $predictionRepository,
+        private readonly GameRepositoryInterface $gameRepository,
+        private readonly PredictionRepositoryInterface $predictionRepository,
     ) {}
 
     #[Route('', name: 'home_index', methods: ['GET'])]

@@ -5,13 +5,13 @@ namespace App\Service;
 use App\Entity\Game;
 use App\Entity\Prediction;
 use App\Enum\GameStatusEnum;
-use App\Repository\PredictionRepository;
+use App\Repository\PredictionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PredictionPointService
+class PredictionPointService implements PredictionPointServiceInterface
 {
     public function __construct(
-        private readonly PredictionRepository $repository,
+        private readonly PredictionRepositoryInterface $repository,
         private readonly EntityManagerInterface $em,
     ) {}
 

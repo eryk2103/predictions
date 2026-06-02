@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Prediction>
  */
-class PredictionRepository extends ServiceEntityRepository
+class PredictionRepository extends ServiceEntityRepository implements PredictionRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

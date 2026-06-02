@@ -8,6 +8,14 @@ framework:
     #esi: true
     #fragments: true
 
+    exceptions:
+        App\Exception\NotFoundException:
+            log_level: notice
+            status_code: 404
+        App\Exception\BusinessRuleException:
+            log_level: warning
+            status_code: 422
+
 when@test:
     framework:
         test: true

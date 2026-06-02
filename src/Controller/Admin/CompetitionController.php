@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\CompetitionService;
+use App\Dto\CreateCompetitionDto;
+use App\Dto\UpdateCompetitionDto;
 use App\Entity\Competition;
 use App\Form\CompetitionType;
+use App\Service\CompetitionServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/competition', name: 'admin_')]
 class CompetitionController extends AbstractController
 {
-    public function __construct(private readonly CompetitionService $service) {}
+    public function __construct(private readonly CompetitionServiceInterface $service) {}
 
     #[Route('', name: 'competition_index', methods: ['GET'])]
     public function index(): Response
@@ -31,7 +33,13 @@ class CompetitionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->service->save($competition);
+            $this->service->create(new CreateCompetitionDto(
+                $competition->getName(),
+                $competition->getShortName(),
+                $competition->getStartYear(),
+                $competition->getEndYear(),
+                $competition->getLogo(),
+            ));
 
             return $this->redirectToRoute('admin_competition_index');
         }
@@ -57,16 +65,13 @@ class CompetitionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Competition $data */
-            $data = $form->getData();
-            $this->service->update(
-                $competition,
-                $data->getName(),
-                $data->getShortName(),
-                $data->getStartYear(),
-                $data->getEndYear(),
-                $data->getLogo(),
-            );
+            $this->service->update($competition, new UpdateCompetitionDto(
+                $competition->getName(),
+                $competition->getShortName(),
+                $competition->getStartYear(),
+                $competition->getEndYear(),
+                $competition->getLogo(),
+            ));
 
             return $this->redirectToRoute('admin_competition_show', ['id' => $id]);
         }
