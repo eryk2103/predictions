@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}Home{% endblock %}
 
@@ -18,7 +19,10 @@
             <div class="card">
                 <div class="card-body py-2 px-3"
                      style="display: grid; grid-template-columns: 1fr 5rem 1fr auto auto auto; align-items: center; gap: 0.75rem;">
-                    <span class="fw-semibold text-end">{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</span>
+                    <span class="fw-semibold text-end d-flex align-items-center justify-content-end gap-2">
+                        {{ game.homeTeam ? game.homeTeam.shortName : '—' }}
+                        {{ macros.team_logo(game.homeTeam, 24) }}
+                    </span>
                     <span class="fw-bold text-center">
                         {% if game.homeScore is not null %}
                             {{ game.homeScore }} – {{ game.awayScore }}
@@ -26,7 +30,10 @@
                             vs
                         {% endif %}
                     </span>
-                    <span class="fw-semibold">{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</span>
+                    <span class="fw-semibold d-flex align-items-center gap-2">
+                        {{ macros.team_logo(game.awayTeam, 24) }}
+                        {{ game.awayTeam ? game.awayTeam.shortName : '—' }}
+                    </span>
                     <small class="text-nowrap">
                         {% set prediction = predictions[game.id] ?? null %}
                         {% if prediction %}

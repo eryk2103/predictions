@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}Games{% endblock %}
 
@@ -63,7 +64,10 @@
                     <tr>
                         <td>{{ game.id }}</td>
                         <td>{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</td>
-                        <td>{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</td>
+                        <td class="text-end">
+                            {{ macros.team_logo(game.homeTeam, 20) }}
+                            {{ game.homeTeam ? game.homeTeam.shortName : '—' }}
+                        </td>
                         <td class="text-center fw-bold">
                             {% if game.homeScore is not null %}
                                 {{ game.homeScore }} – {{ game.awayScore }}
@@ -71,7 +75,10 @@
                                 –
                             {% endif %}
                         </td>
-                        <td>{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</td>
+                        <td>
+                            {{ game.awayTeam ? game.awayTeam.shortName : '—' }}
+                            {{ macros.team_logo(game.awayTeam, 20) }}
+                        </td>
                         <td>{{ game.competitionPhase.name }}</td>
                         <td><span class="badge text-bg-secondary">{{ game.status.value }}</span></td>
                         <td class="text-end">

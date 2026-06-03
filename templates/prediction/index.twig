@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}My Predictions{% endblock %}
 
@@ -62,9 +63,13 @@
                 {% for prediction in predictions %}
                     <tr>
                         <td>
-                            {{ prediction.game.homeTeam ? prediction.game.homeTeam.shortName : '—' }}
-                            vs
-                            {{ prediction.game.awayTeam ? prediction.game.awayTeam.shortName : '—' }}
+                            <span class="d-inline-flex align-items-center gap-1">
+                                {{ macros.team_logo(prediction.game.homeTeam, 20) }}
+                                {{ prediction.game.homeTeam ? prediction.game.homeTeam.shortName : '—' }}
+                                vs
+                                {{ prediction.game.awayTeam ? prediction.game.awayTeam.shortName : '—' }}
+                                {{ macros.team_logo(prediction.game.awayTeam, 20) }}
+                            </span>
                         </td>
                         <td>{{ prediction.game.datetime ? prediction.game.datetime|date('d M Y H:i') : '—' }}</td>
                         <td><span class="badge text-bg-secondary">{{ prediction.game.status.value|replace({'_': ' '})|title }}</span></td>

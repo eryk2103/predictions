@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}{{ team.name }}{% endblock %}
 
@@ -43,7 +44,9 @@
                 </dd>
 
                 <dt class="col-sm-3">Logo</dt>
-                <dd class="col-sm-9">{{ team.logo ?: '—' }}</dd>
+                <dd class="col-sm-9">
+                    {% if team.logo %}{{ macros.team_logo(team, 64) }}{% else %}—{% endif %}
+                </dd>
 
                 <dt class="col-sm-3">Created</dt>
                 <dd class="col-sm-9">{{ team.createdAt|date('Y-m-d H:i') }}</dd>

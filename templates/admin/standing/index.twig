@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}Standings{% endblock %}
 
@@ -52,7 +53,12 @@
                     {% for standing in standings %}
                         <tr>
                             <td>{{ standing.position }}</td>
-                            <td>{{ standing.team.name }}</td>
+                            <td>
+                                <span class="d-inline-flex align-items-center gap-2">
+                                    {{ macros.team_logo(standing.team, 20) }}
+                                    {{ standing.team.name }}
+                                </span>
+                            </td>
                             <td class="text-center">{{ standing.played }}</td>
                             <td class="text-center">{{ standing.won }}</td>
                             <td class="text-center">{{ standing.drawn }}</td>
@@ -107,7 +113,10 @@
                         {% for game in groupedGames[phase.id] ?? [] %}
                             <tr>
                                 <td>{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</td>
-                                <td>{{ game.homeTeam ? game.homeTeam.shortName : '—' }}</td>
+                                <td class="text-end">
+                                    {{ macros.team_logo(game.homeTeam, 20) }}
+                                    {{ game.homeTeam ? game.homeTeam.shortName : '—' }}
+                                </td>
                                 <td class="text-center fw-bold">
                                     {% if game.homeScore is not null %}
                                         {{ game.homeScore }} – {{ game.awayScore }}
@@ -118,7 +127,10 @@
                                         –
                                     {% endif %}
                                 </td>
-                                <td>{{ game.awayTeam ? game.awayTeam.shortName : '—' }}</td>
+                                <td>
+                                    {{ game.awayTeam ? game.awayTeam.shortName : '—' }}
+                                    {{ macros.team_logo(game.awayTeam, 20) }}
+                                </td>
                                 <td><span class="badge text-bg-secondary">{{ game.status.value }}</span></td>
                                 <td class="text-end">
                                     <a href="{{ path('admin_game_show', {id: game.id}) }}" class="btn btn-sm btn-outline-secondary">View</a>

@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}Game #{{ game.id }}{% endblock %}
 
@@ -13,7 +14,10 @@
     <div class="card mb-4">
         <div class="card-body text-center py-4">
             <div class="row align-items-center">
-                <div class="col text-end fs-5 fw-semibold">{{ game.homeTeam ? game.homeTeam.name : '—' }}</div>
+                <div class="col text-end fs-5 fw-semibold">
+                    {{ game.homeTeam ? game.homeTeam.name : '—' }}
+                    {{ macros.team_logo(game.homeTeam, 40) }}
+                </div>
                 <div class="col-auto px-4">
                     {% if game.homeScore is not null %}
                         <span class="display-5 fw-bold">{{ game.homeScore }} – {{ game.awayScore }}</span>
@@ -24,7 +28,10 @@
                         <span class="display-5 fw-bold text-muted">– vs –</span>
                     {% endif %}
                 </div>
-                <div class="col text-start fs-5 fw-semibold">{{ game.awayTeam ? game.awayTeam.name : '—' }}</div>
+                <div class="col text-start fs-5 fw-semibold">
+                    {{ macros.team_logo(game.awayTeam, 40) }}
+                    {{ game.awayTeam ? game.awayTeam.name : '—' }}
+                </div>
             </div>
         </div>
     </div>
@@ -63,14 +70,20 @@
         </div>
         <div class="card-body text-center py-3">
             <div class="row align-items-center">
-                <div class="col text-end fw-semibold">{{ game.homeTeam ? game.homeTeam.name : '—' }}</div>
+                <div class="col text-end fw-semibold">
+                    {{ game.homeTeam ? game.homeTeam.name : '—' }}
+                    {{ macros.team_logo(game.homeTeam, 32) }}
+                </div>
                 <div class="col-auto px-4">
                     <span class="fs-4 fw-bold text-primary">{{ prediction.homeScore }} – {{ prediction.awayScore }}</span>
                     {% if prediction.homePenalty is not null %}
                         <div class="text-muted small mt-1">({{ prediction.homePenalty }} – {{ prediction.awayPenalty }} pens)</div>
                     {% endif %}
                 </div>
-                <div class="col text-start fw-semibold">{{ game.awayTeam ? game.awayTeam.name : '—' }}</div>
+                <div class="col text-start fw-semibold">
+                    {{ macros.team_logo(game.awayTeam, 32) }}
+                    {{ game.awayTeam ? game.awayTeam.name : '—' }}
+                </div>
             </div>
         </div>
     </div>

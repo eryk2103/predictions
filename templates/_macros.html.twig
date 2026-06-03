@@ -1,0 +1,8 @@
+{% macro team_logo(team, size) %}
+    {% if team and team.logo %}
+        <img src="{{ asset('Upload/' ~ team.logo) }}"
+             alt="{{ team.name }}"
+             style="width: {{ size ?? 24 }}px; height: {{ size ?? 24 }}px; object-fit: contain; background-color: #f2f2f2; border-radius: 3px; padding: 4px"
+             class="d-inline-block">
+    {% endif %}
+{% endmacro %}
