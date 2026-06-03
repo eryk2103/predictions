@@ -50,7 +50,7 @@
                             <span
                                 class="badge text-bg-secondary">{{ game.status.value|replace({'_': ' '})|title }}</span>
                         {% else %}
-                            <span class="text-muted">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</span>
+                            <span class="text-muted">{{ macros.local_time(game.datetime) }}</span>
                         {% endif %}
                     </small>
                     <a href="{{ path('game_show', {id: game.id}) }}"

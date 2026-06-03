@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}{{ competition.name }}{% endblock %}
 
@@ -29,10 +30,10 @@
                 <dd class="col-sm-9">{{ competition.logo ?? '—' }}</dd>
 
                 <dt class="col-sm-3">Created</dt>
-                <dd class="col-sm-9">{{ competition.createdAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(competition.createdAt) }}</dd>
 
                 <dt class="col-sm-3">Updated</dt>
-                <dd class="col-sm-9">{{ competition.updatedAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(competition.updatedAt) }}</dd>
             </dl>
         </div>
     </div>

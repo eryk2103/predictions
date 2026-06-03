@@ -1,3 +1,11 @@
+{% macro local_time(datetime, fallback) %}
+    {%- if datetime -%}
+        <time datetime="{{ datetime|date('c') }}" data-local>{{ datetime|date('d M Y H:i') }}</time>
+    {%- else -%}
+        {{ fallback ?? '—' }}
+    {%- endif -%}
+{% endmacro %}
+
 {% macro team_logo(team, size) %}
     {% if team and team.logo %}
         <img src="{{ storage_url(team.logo) }}"

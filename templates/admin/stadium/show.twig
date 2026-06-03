@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}{{ stadium.name }}{% endblock %}
 
@@ -35,10 +36,10 @@
                 <dd class="col-sm-9">{{ stadium.capacity ? stadium.capacity|number_format : '—' }}</dd>
 
                 <dt class="col-sm-3">Created</dt>
-                <dd class="col-sm-9">{{ stadium.createdAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(stadium.createdAt) }}</dd>
 
                 <dt class="col-sm-3">Updated</dt>
-                <dd class="col-sm-9">{{ stadium.updatedAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(stadium.updatedAt) }}</dd>
             </dl>
         </div>
     </div>

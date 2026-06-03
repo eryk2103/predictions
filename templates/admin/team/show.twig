@@ -49,10 +49,10 @@
                 </dd>
 
                 <dt class="col-sm-3">Created</dt>
-                <dd class="col-sm-9">{{ team.createdAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(team.createdAt) }}</dd>
 
                 <dt class="col-sm-3">Updated</dt>
-                <dd class="col-sm-9">{{ team.updatedAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(team.updatedAt) }}</dd>
             </dl>
         </div>
     </div>

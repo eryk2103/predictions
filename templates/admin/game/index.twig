@@ -63,7 +63,7 @@
                 {% for game in games %}
                     <tr>
                         <td>{{ game.id }}</td>
-                        <td>{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</td>
+                        <td>{{ macros.local_time(game.datetime) }}</td>
                         <td class="text-end">
                             {{ macros.team_logo(game.homeTeam, 20) }}
                             {{ game.homeTeam ? game.homeTeam.shortName : '—' }}

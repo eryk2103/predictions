@@ -71,7 +71,7 @@
                                 {{ macros.team_logo(prediction.game.awayTeam, 20) }}
                             </span>
                         </td>
-                        <td>{{ prediction.game.datetime ? prediction.game.datetime|date('d M Y H:i') : '—' }}</td>
+                        <td>{{ macros.local_time(prediction.game.datetime) }}</td>
                         <td><span class="badge text-bg-secondary">{{ prediction.game.status.value|replace({'_': ' '})|title }}</span></td>
                         <td class="text-center fw-bold">
                             {{ prediction.homeScore }} – {{ prediction.awayScore }}

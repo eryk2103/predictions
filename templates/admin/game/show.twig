@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as macros %}
 
 {% block title %}Game #{{ game.id }}{% endblock %}
 
@@ -47,7 +48,7 @@
                 <dd class="col-sm-9"><span class="badge text-bg-secondary">{{ game.status.value }}</span></dd>
 
                 <dt class="col-sm-3">Date &amp; time</dt>
-                <dd class="col-sm-9">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(game.datetime) }}</dd>
 
                 <dt class="col-sm-3">Phase</dt>
                 <dd class="col-sm-9">
@@ -62,10 +63,10 @@
                 </dd>
 
                 <dt class="col-sm-3">Created</dt>
-                <dd class="col-sm-9">{{ game.createdAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(game.createdAt) }}</dd>
 
                 <dt class="col-sm-3">Updated</dt>
-                <dd class="col-sm-9">{{ game.updatedAt|date('Y-m-d H:i') }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(game.updatedAt) }}</dd>
             </dl>
         </div>
     </div>

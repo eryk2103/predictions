@@ -43,7 +43,7 @@
                 <dd class="col-sm-9"><span class="badge text-bg-secondary">{{ game.status.value }}</span></dd>
 
                 <dt class="col-sm-3">Date &amp; time</dt>
-                <dd class="col-sm-9">{{ game.datetime ? game.datetime|date('d M Y H:i') : '—' }}</dd>
+                <dd class="col-sm-9">{{ macros.local_time(game.datetime) }}</dd>
 
                 <dt class="col-sm-3">Phase</dt>
                 <dd class="col-sm-9">
