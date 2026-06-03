@@ -34,12 +34,12 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
     /**
-     * @return array<int, array{id: int, email: string, points: int}>
+     * @return array<int, array{id: int, username: string, points: int}>
      */
     public function getRankings(?int $competitionId = null, ?int $phaseId = null): array
     {
         $qb = $this->createQueryBuilder('u')
-            ->select('u.id, u.email, COALESCE(SUM(p.points), 0) AS points')
+            ->select('u.id, u.username, COALESCE(SUM(p.points), 0) AS points')
             ->leftJoin('u.predictions', 'p');
 
         if ($phaseId !== null) {

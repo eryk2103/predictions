@@ -11,6 +11,6 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 interface UserRepositoryInterface extends ObjectRepository, PasswordUpgraderInterface
 {
-    /** @return array<int, array{id: int, email: string, points: int}> */
+    /** @return array<int, array{id: int, username: string, points: int}> */
     public function getRankings(?int $competitionId = null, ?int $phaseId = null): array;
 }

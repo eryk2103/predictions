@@ -53,7 +53,7 @@
             {% for row in rankings %}
                 <tr{% if app.user and app.user.id == row.id %} class="table-primary"{% endif %}>
                     <td>{{ loop.index }}</td>
-                    <td>{{ row.email }}</td>
+                    <td>{{ row.username }}</td>
                     <td class="text-center fw-bold">{{ row.points }}</td>
                 </tr>
             {% else %}
