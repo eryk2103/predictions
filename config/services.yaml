@@ -42,3 +42,14 @@ services:
     App\Service\StadiumServiceInterface: '@App\Service\StadiumService'
     App\Service\StandingServiceInterface: '@App\Service\StandingService'
     App\Service\TeamServiceInterface: '@App\Service\TeamService'
+
+    App\Service\StorageServiceInterface: '@App\Service\LocalStorageService'
+
+when@prod:
+    services:
+        App\Service\StorageServiceInterface: '@App\Service\GoogleCloudStorageService'
+
+        App\Service\GoogleCloudStorageService:
+            arguments:
+                $bucketName: '%env(GCS_BUCKET)%'
+                $projectId: '%env(GCS_PROJECT_ID)%'

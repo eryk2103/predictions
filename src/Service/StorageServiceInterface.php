@@ -6,5 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface StorageServiceInterface
 {
-    function upload(UploadedFile $file);
+    public function upload(UploadedFile $file): string;
+
+    public function getPublicUrl(string $filename): string;
 }

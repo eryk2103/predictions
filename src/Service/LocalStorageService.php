@@ -21,4 +21,9 @@ class LocalStorageService implements StorageServiceInterface
 
         return $fileName;
     }
+
+    public function getPublicUrl(string $filename): string
+    {
+        return 'Upload/' . $filename;
+    }
 }
