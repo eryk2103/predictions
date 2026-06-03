@@ -7,8 +7,10 @@ use App\Dto\UpdateTeamDto;
 use App\Entity\Team;
 use App\Form\TeamType;
 use App\Controller\Trait\PaginationTrait;
+use App\Service\StorageServiceInterface;
 use App\Service\TeamServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +20,8 @@ class TeamController extends AbstractController
 {
     use PaginationTrait;
 
-    public function __construct(private readonly TeamServiceInterface $service) {}
+    public function __construct(private readonly TeamServiceInterface $service,
+                                private readonly StorageServiceInterface $storageService) {}
 
     #[Route('', name: 'team_index', methods: ['GET'])]
     public function index(Request $request): Response
@@ -40,11 +43,25 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $logo = $form->get('logo')->getData();
+            $logoPath = null;
+
+            if($logo) {
+                try {
+                    $logoPath = $this->storageService->upload($logo);
+                }catch(FileException $exception) {
+                    return $this->render('admin/team/new.twig', [
+                        'form' => $form,
+                        'error' => 'Something went wrong while uploading logo.',
+                    ]);
+                }
+            }
+
             $this->service->create(new CreateTeamDto(
                 $team->getName(),
                 $team->getShortName(),
                 $team->getCode(),
-                $team->getLogo(),
+                $logoPath,
                 $team->getCity(),
                 $team->getCountry(),
                 $team->getStadium(),
@@ -74,11 +91,25 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $logo = $form->get('logo')->getData();
+            $logoPath = null;
+
+            if($logo) {
+                try {
+                    $logoPath = $this->storageService->upload($logo);
+                }catch(FileException $exception) {
+                    return $this->render('admin/team/new.twig', [
+                        'form' => $form,
+                        'error' => 'Something went wrong while uploading logo.',
+                    ]);
+                }
+            }
+
             $this->service->update($team, new UpdateTeamDto(
                 $team->getName(),
                 $team->getShortName(),
                 $team->getCode(),
-                $team->getLogo(),
+                $logoPath,
                 $team->getCity(),
                 $team->getCountry(),
                 $team->getStadium(),

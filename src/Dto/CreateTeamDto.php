@@ -21,9 +21,8 @@ final readonly class CreateTeamDto
         #[Assert\Length(max: 3)]
         public string $code,
 
-        #[Assert\NotBlank]
         #[Assert\Length(max: 255)]
-        public string $logo,
+        public ?string $logo = null,
 
         #[Assert\Length(max: 255)]
         public ?string $city = null,

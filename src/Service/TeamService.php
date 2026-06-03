@@ -23,7 +23,7 @@ class TeamService implements TeamServiceInterface
             ->setName($dto->name)
             ->setShortName($dto->shortName)
             ->setCode($dto->code)
-            ->setLogo($dto->logo)
+            ->setLogo($dto->logo ?? '')
             ->setCity($dto->city)
             ->setCountry($dto->country)
             ->setStadium($dto->stadium);
@@ -56,10 +56,13 @@ class TeamService implements TeamServiceInterface
             ->setName($dto->name)
             ->setShortName($dto->shortName)
             ->setCode($dto->code)
-            ->setLogo($dto->logo)
             ->setCity($dto->city)
             ->setCountry($dto->country)
             ->setStadium($dto->stadium);
+
+        if($dto->logo !== null){
+            $team->setLogo($dto->logo);
+        }
 
         $this->em->flush();
 

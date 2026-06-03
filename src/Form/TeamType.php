@@ -7,10 +7,12 @@ use App\Entity\Stadium;
 use App\Entity\Team;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class TeamType extends AbstractType
 {
@@ -23,7 +25,17 @@ class TeamType extends AbstractType
                 'constraints' => [new Length(max: 3)],
                 'attr' => ['maxlength' => 3],
             ])
-            ->add('logo', TextType::class, ['required' => false])
+            ->add('logo', FileType::class, [
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new Assert\File(
+                        maxSize: '1024k',
+                        extensions: ['svg'],
+                        extensionsMessage: 'Please upload a valid SVG file',
+                    )
+                ],
+            ])
             ->add('city', TextType::class, ['required' => false])
             ->add('country', EntityType::class, [
                 'class' => Country::class,

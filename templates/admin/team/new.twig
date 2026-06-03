@@ -6,6 +6,11 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-5">
+            {% if error is defined and error is not empty %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
             <h1 class="h3 mb-4">New team</h1>
 
             {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
