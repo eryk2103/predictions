@@ -17,3 +17,5 @@
 ###< phpunit/phpunit ###
 
 public/Upload/
+
+.DS_Store
