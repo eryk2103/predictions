@@ -24,3 +24,9 @@ A football match prediction web application built with **Symfony 8** and **PHP 8
 | Templates | Twig + Bootstrap                                |
 | Testing | PHPUnit 13                                      |
 | Containerisation | Docker / Docker Compose                         |
+
+
+## Screenshots
+
+### HomePage
+![docs/home.png](docs/home.png)

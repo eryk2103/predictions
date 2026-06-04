@@ -9,5 +9,3 @@
 
 controllers:
     resource: routing.controllers
-    prefix: '/predictions'
-    trailing_slash_on_root: false
